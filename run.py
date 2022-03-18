@@ -2,7 +2,6 @@ from ressources import *
 from datetime import datetime
 from pathlib import Path
 import logging as log
-import os
 
 cwd = Path.cwd()
 config_file = "configs.json"
