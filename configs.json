@@ -1,0 +1,5 @@
+{
+	"token": "AppTokenHere",
+	"maxLogs": 0,
+	"cmdPrefix": "!"
+}
