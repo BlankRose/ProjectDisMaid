@@ -5,7 +5,7 @@
 
 <p align='center'>
   <img alt="Top Language" src="https://img.shields.io/static/v1?label=Language&message=Python&color=important&style=plastic"/>
-	<img alt="Supported" src="https://img.shields.io/static/v1?label=Supported+OS&message=Linux&color=yellow&style=plastic"/>
+	<img alt="Supported" src="https://img.shields.io/static/v1?label=Supported+OS&message=Windows&color=yellow&style=plastic"/>
 	<img alt="Code Size" src="https://img.shields.io/github/languages/code-size/BlankRose/libft?label=Code+Size&color=informational&style=plastic"/>
 	<img alt="Last Commit" src="https://img.shields.io/github/last-commit/BlankRose/libft?label=Last+Commit&color=critical&style=plastic"/>
 </p>
