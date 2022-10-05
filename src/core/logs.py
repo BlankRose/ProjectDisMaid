@@ -20,7 +20,7 @@ class Logs():
 
 	folder = ""
 	file = ""
-	
+
 	#==-----==#
 
 	def __init__(self, folder: str = "logs", file: str = "latest.log") -> None:

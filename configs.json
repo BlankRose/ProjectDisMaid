@@ -1,5 +1,4 @@
 {
-	"token": "AppTokenHere",
-	"maxLogs": 0,
-	"cmdPrefix": "!"
+	"token": "InsertTokenHere",
+	"maxLogs": 5
 }
