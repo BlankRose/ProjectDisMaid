@@ -8,7 +8,7 @@ class Config():
 	Attributes:
 	- `data`: dict
 
-	Methods:	
+	Methods:
 	- `fecth` (self, folder: str, file: str) -> None
 	- `save` (data: dict, folder: str, file: str) -> None
 	- `check` (data: dict, important: tuple, options: tuple) -> bool

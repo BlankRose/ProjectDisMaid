@@ -7,13 +7,15 @@ class Help():
 	command = "help"
 	alias = ["commands", "guidelines", "cmds"]
 
-	syntax = command + " [command]"
+	syntax = command + " [Command]"
 	icon = "📕"
 
 	short = icon + " The maid's guidelines"
 	description = """This command will open the maid's guidelines, where is located the `command` when specified or gives a summary if nothing is given.\n
-					ARGUMENTS :
-					`COMMAND` - *Search for a specefic command*"""
+					ARGUMENTS:
+					`Command` - *Search for a specefic command*\n
+					UNSPECIFIED VALUES:
+					`Command` - *It will instead opens a summary of avaible commands*"""
 
 	#==-----==#
 

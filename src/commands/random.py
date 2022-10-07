@@ -111,6 +111,7 @@ class Random():
 	#==-----==#
 
 			@cmd.command(name = i, description = self.short)
+			@discord.app_commands.describe(arguments = f"List of random sets (/help {self.command} for details)")
 			async def run(interaction: discord.Interaction, arguments: str = None):
 
 				args = []

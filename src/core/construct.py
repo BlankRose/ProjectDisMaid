@@ -1,64 +1,24 @@
-import traceback
-from src import commands
-from src.core import *
-from pathlib import Path
-import logging as log
-import discord.app_commands as app
-import discord
+import datetime
 
-def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEBUG) -> str:
+def max_time() -> datetime.time:
+	return datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)
 
-	info = logs.Logs(folder=cwd.joinpath("logs"),
-					 file=log_file)
-	log.basicConfig(filename=info.file,
-					filemode="w",
-					level=log_level,
-					format="[%(asctime)s] %(levelname)s >> %(message)s")
-	logs.Logs.folder = info.folder
-	logs.Logs.file = info.file
-	log.debug("Logs setup complete!..")
-
-	config = configs.Config()
-	config.fetch(cwd, config_file)
-	data = config.data
-	configs.Config.data = config.data
-	if not (config.check(verify=data,
-						important=(("token", str),),
-						options=(("maxLogs", int, 5),))):
-		logs.Logs.danger("ABORTING..")
-	
-	info.clean(data["maxLogs"])
-	return (data["token"])
-
-def setup(cmds: app.CommandTree) -> None:
-	@cmds.command(name="hai", description="💬 Say hello to the maid")
-	async def hello(interaction: discord.Interaction):
-		import random as rng
-		caseA = ["Hai sweetheart~",
-				"Hello there~",
-				"Hoi!"]
-		strA = caseA[rng.randrange(0, len(caseA))]
-		caseB = ["(^owo^)s *Meow.*",
-				"How are you?",
-				"Would you like some cookies?",
-				"Have you seen my cat? I can't find it anywhere."]
-		strB = caseB[rng.randrange(0, len(caseB))]
-		await interaction.response.send_message(f"{strA}\n{strB}", ephemeral=True)
-
-def run(token: str) -> None:
-	bot = client.Client()
-	cmds = app.CommandTree(bot)
-
-	entries = commands.entries
-	for i in entries:
-		entries[i]().register(cmds, entries)
-
-	@cmds.error
-	async def cmd_error(interaction: discord.Interaction, error: app.AppCommandError):
-		if isinstance(error, app.CommandOnCooldown):
-			await interaction.response.send_message(f"Please, lemme relax a bit between tasks..\nI'll be avaible again for that in {error.retry_after}!")
+def parse_time(time: str) -> datetime.datetime:
+	time = time.replace(" ", "").replace("	", "")
+	if time.lower() == "inf" or time.lower() == "infinite": return max_time()
+	result = datetime.datetime.now().astimezone()
+	tmp = ""
+	for i in time:
+		if i.isdigit(): tmp += i
 		else:
-			log.error(traceback.format_exc())
-
-	client.Client.cmds = cmds
-	bot.run(token)
+			if i != 'y' and i != 'd' and i != 'h' and i != 'm' and i != 's': return
+			try:
+				if tmp == "": continue
+				if i == 'y': result += datetime.timedelta(days = int(tmp) * 365)
+				if i == 'd': result += datetime.timedelta(days = int(tmp))
+				if i == 'h': result += datetime.timedelta(hours = int(tmp))
+				if i == 'm': result += datetime.timedelta(minutes = int(tmp))
+				if i == 's': result += datetime.timedelta(seconds = int(tmp))
+			except OverflowError: return
+			tmp = ""
+	return result

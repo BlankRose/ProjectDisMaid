@@ -1,5 +1,4 @@
 import logging
-from math import perm
 import discord
 
 async def guild(interaction: discord.Interaction, msg: bool = True) -> bool:
@@ -7,7 +6,24 @@ async def guild(interaction: discord.Interaction, msg: bool = True) -> bool:
 	Checks wether the interaction is made in a guild
 	"""
 	if not interaction.guild:
-		if msg: await interaction.response.send_message("You must be in a Guild to execute this command!", ephemeral = True)
+		if msg: await interaction.response.send_message("You must be in a guild to execute this command!", ephemeral = True)
+		return False
+	return True
+
+	#==-----==#
+
+async def is_member(interaction: discord.Interaction, user: discord.User, msg: bool = True) -> bool:
+	"""
+	Checks wether the user is in the guild
+	"""
+	if not user:
+		logging.warning("Trying to predicate if member on non-existant user! BLOCKED")
+		return False
+	if not await guild(interaction, False):
+		logging.warning("Trying to predicate if member out of guilds! IGNORED")
+		return True
+	if not interaction.guild.get_member(user.id):
+		if msg: await interaction.response.send_message("The given user cannot be found! Are you sure he's part of this guild?..", ephemeral = True)
 		return False
 	return True
 
