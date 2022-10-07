@@ -1,4 +1,4 @@
-__all__ = ["hello", "random"]
+__all__ = ["hello", "random", "mute"]
 
 from src.commands import help
 import importlib

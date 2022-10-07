@@ -21,6 +21,7 @@ class Client(discord.Client):
 
 		- `INTENTS` = Permission intents for the client
 		"""
+		intents.members = True
 		super().__init__(intents=intents)
 		self.synced = False
 

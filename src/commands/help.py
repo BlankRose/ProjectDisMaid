@@ -32,14 +32,16 @@ class Help():
 	#==-----==#
 
 			@cmd.command(name = i, description = self.short)
+			@discord.app_commands.describe(command = "The command to check")
 			@discord.app_commands.autocomplete(command = autocomplete)
 			async def run(interaction: discord.Interaction, command: str = None):
 				embed = discord.embeds.Embed()
 				embed.color = 0xb842ae
 				embed.title = "**Maids' Guidelines**"
+				embed.set_footer(text = "Edited by Rosie#4721 - 2022", icon_url = "https://i.imgur.com/w1BwX4h.png")
 
-				file_logo = discord.File("assets/logo.png", filename = "logo.png")
 				if not command:
+					file_logo = discord.File("assets/logo.png", filename = "logo.png")
 					embed.description = "*Comming soon.. TM*"
 					embed.set_thumbnail(url="attachment://logo.png")
 					for i in entries:
@@ -48,6 +50,8 @@ class Help():
 							name = f"/{entry.syntax}",
 							value = entry.short,
 							inline = False )
+					await interaction.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True)
+
 				else:
 					for i in entries:
 						if i == command:
@@ -56,10 +60,7 @@ class Help():
 							for i in entry.alias:
 								embed.description += f" `{i}`"
 							embed.description += f"\n\n{entry.description}"
+							await interaction.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
 							break
 					else:
 						await interaction.response.send_message("Sorry, I didn't found any entry in the guidelines.", ephemeral = True)
-						return
-
-				embed.set_footer(text = "Edited by Rosie#4721 - 2022", icon_url = "https://i.imgur.com/w1BwX4h.png")
-				await interaction.response.send_message("Here is what I found:", file = file_logo, embed = embed, ephemeral = True)
