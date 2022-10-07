@@ -1,4 +1,4 @@
-from src.core import predicates, construct
+from src.core import predicates
 import time as t
 import discord
 
