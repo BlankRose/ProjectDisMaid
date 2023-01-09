@@ -48,7 +48,7 @@ class Mute():
 					await interaction.response.send_message("Why do you want me silenced so badly? ;w;'", ephemeral = True)
 					return
 
-				if not await predicates.guild(interaction): return
+				if not await predicates.from_guild(interaction): return
 				if not await predicates.is_member(interaction, user): return
 				if not await predicates.user_permissions(interaction, user, discord.Permissions(moderate_members = True)): return
 				if not await predicates.app_permissions(interaction, discord.Permissions(moderate_members = True)): return

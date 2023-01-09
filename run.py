@@ -1,14 +1,3 @@
-# ********************************************************************* #
-#          .-.                                                          #
-#    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   DisMaid - run.py                                #
-#    '-._.(;;;)._.-'                                                    #
-#    .-'  ,`"`,  '-.                                                    #
-#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Jan  6 14:43:13 CET 2023      #
-#      ||  '-'                                                          #
-# ********************************************************************* #
-
 from src.core.client import *
 from datetime import datetime
 from pathlib import Path

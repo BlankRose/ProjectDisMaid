@@ -1,5 +1,4 @@
 import logging
-from typing import List
 import discord
 import random as rng
 import math

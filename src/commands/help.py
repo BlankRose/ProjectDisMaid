@@ -44,7 +44,7 @@ class Help():
 
 				if not command:
 					file_logo = discord.File("assets/logo.png", filename = "logo.png")
-					embed.description = "*Comming soon.. TM*"
+					embed.description = "*Coming soon.. TM*"
 					embed.set_thumbnail(url="attachment://logo.png")
 					for i in entries:
 						entry = entries[i]()

@@ -1,12 +1,23 @@
 import logging
 import discord
 
-async def guild(interaction: discord.Interaction, msg: bool = True) -> bool:
+async def from_guild(interaction: discord.Interaction, msg: bool = True) -> bool:
 	"""
 	Checks wether the interaction is made in a guild
 	"""
 	if not interaction.guild:
 		if msg: await interaction.response.send_message("You must be in a guild to execute this command!", ephemeral = True)
+		return False
+	return True
+
+	#==-----==#
+
+async def from_dm(interaction: discord.Interaction, msg: bool = True) -> bool:
+	"""
+	Checks wether the interaction is made in DMs
+	"""
+	if interaction.guild:
+		if msg: await interaction.response.send_message("You must be in DMs to execute this command!", ephemeral = True)
 		return False
 	return True
 
@@ -19,7 +30,7 @@ async def is_member(interaction: discord.Interaction, user: discord.User, msg: b
 	if not user:
 		logging.warning("Trying to predicate if member on non-existant user! BLOCKED")
 		return False
-	if not await guild(interaction, False):
+	if not await from_guild(interaction, False):
 		logging.warning("Trying to predicate if member out of guilds! IGNORED")
 		return True
 	if not interaction.guild.get_member(user.id):
@@ -101,7 +112,7 @@ async def user_permissions(interaction: discord.Interaction, user: discord.User,
 	if not user:
 		logging.warning("Trying to predicate permissions on non-existant user! BLOCKED")
 		return False
-	if not await guild(interaction, False):
+	if not await from_guild(interaction, False):
 		logging.warning("Trying to predicate permissions out of guilds! IGNORED")
 		return True
 	return await member_permissions(interaction, interaction.guild.get_member(user.id), perms, msg)
@@ -112,7 +123,7 @@ async def app_permissions(interaction: discord.Interaction, perms: discord.Permi
 	"""
 	Checks if the application has the sufficient permissions (Shall be used in guilds!)
 	"""
-	if not await guild(interaction, False):
+	if not await from_guild(interaction, False):
 		logging.warning("Trying to predicate permissions out of guilds! IGNORED")
 		return True
 	if not await member_permissions(interaction, interaction.guild.get_member(interaction.client.user.id), perms, False):

@@ -22,3 +22,17 @@ def parse_time(time: str) -> datetime.datetime:
 			except OverflowError: return
 			tmp = ""
 	return result
+
+def parse_hexa(data: str) -> int:
+	value = 0
+	for i in data:
+		value *= 16
+		if (i >= '0' and i <= '9'):
+			value += ord(i) - ord('0')
+		elif (i >= 'A' and i <= 'F'):
+			value += ord(i) - ord('A') + 10
+		elif (i >= 'a' and i <= 'f'):
+			value += ord(i) - ord('a') + 10
+		else:
+			return
+	return value

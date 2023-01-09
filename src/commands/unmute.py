@@ -1,5 +1,4 @@
 from src.core import predicates
-import time as t
 import discord
 
 class Unmute():
@@ -37,7 +36,7 @@ class Unmute():
 				dm = "Wether or not a notification should be sent")
 			async def run(interaction: discord.Interaction, user: discord.User, dm: bool = True):
 
-				if not await predicates.guild(interaction): return
+				if not await predicates.from_guild(interaction): return
 				if not await predicates.is_member(interaction, user): return
 				if not await predicates.user_permissions(interaction, user, discord.Permissions(moderate_members = True)): return
 				if not await predicates.app_permissions(interaction, discord.Permissions(moderate_members = True)): return
