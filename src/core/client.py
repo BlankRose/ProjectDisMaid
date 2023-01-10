@@ -70,7 +70,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 						important=(("token", str),),
 						options=(("maxLogs", int, 5),))):
 		logs.Logs.danger("ABORTING..")
-	
+
 	info.clean(data["maxLogs"])
 	return (data["token"])
 

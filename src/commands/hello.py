@@ -10,9 +10,18 @@ class Hello():
 	icon = "💬"
 
 	short = icon + " Giving a warm welcome to the maid is always appreciable"
-	description = """Giving out a warm welcome to the hard working maid is always appreciated and means a lot to them!~ xoxo~\n
-					ARGUMENTS:
-					`None` - *Doesn't contains any arguments*"""
+	description = \
+"""
+Giving out a warm welcome to the hard working maid is always \
+appreciated and means a lot to them!~ xoxo~
+
+__ARGUMENTS:__
+`None` - *Doesn't contains any arguments*
+
+__REQUIERED PERMISSIONS:__
+Application: `None`
+Caller: `None`
+"""
 
 	#==-----==#
 

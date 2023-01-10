@@ -11,22 +11,32 @@ class Mute():
 	icon = "🔇"
 
 	short = icon + " Silence anyone who is being nasty"
-	description = """A basic command to mute someone with some extra parameters to
-					work around. We hope muting can calm those nasty poeple..\n
-					ARGUMENTS:
-					`User` - *User to target (dont try on me plz)*
-					`Time` - *How long they shall be muted*
-					`Reason` - *Why do you want to mute them*
-					`DM` - *Wether or not we shall notify the user in their DMs*\n
-					UNSPECIFIED VALUES:
-					`Time` - *Will be treated as* `inf`
-					`DM` - *Will be treated as* `True`\n
-					SIDE NOTES:
-					`Time` can be set as following `.y.d.h.m.s` (where dots are numbers)
-					`Time` can also be set to `inf` for long term mute
-					By default, this command will use discord's timeout feature but this
-					one is limited to 28 days by the API! This behavior can be switch to
-					role-based which allows much longer mute timespan (currently WIP)"""
+	description = \
+"""
+A basic command to mute someone with some extra parameters to \
+work around. We hope muting can calm those nasty poeple..
+
+__ARGUMENTS:__
+`User` - *User to target (dont try on me plz)*
+`Time` - *How long they shall be muted*
+`Reason` - *Why do you want to mute them*
+`DM` - *Wether or not we shall notify the user in their DMs*
+
+__UNSPECIFIED VALUES:__
+`Time` - *Will be treated as* `inf`
+`DM` - *Will be treated as* `True`
+
+__SIDE NOTES:__
+`Time` can be set as following `.y.d.h.m.s` (where dots are numbers)
+`Time` can also be set to `inf` for long term mute
+By default, this command will use discord's timeout feature but this \
+one is limited to 28 days by the API! This behavior can be switch to \
+role-based which allows much longer mute timespan (currently WIP)
+
+__REQUIERED PERMISSIONS:__
+Application: `Moderate Members`
+Caller: `Moderate Members`
+"""
 
 	#==-----==#
 

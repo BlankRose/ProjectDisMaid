@@ -11,11 +11,21 @@ class Help():
 	icon = "📕"
 
 	short = icon + " The maid's guidelines"
-	description = """This command will open the maid's guidelines, where is located the `command` when specified or gives a summary if nothing is given.\n
-					ARGUMENTS:
-					`Command` - *Search for a specefic command*\n
-					UNSPECIFIED VALUES:
-					`Command` - *It will instead opens a summary of avaible commands*"""
+	description = \
+"""
+This command will open the maid's guidelines, where is located the \
+`command` when specified or gives a summary if nothing is given.
+
+__ARGUMENTS:__
+`Command` - *Search for a specefic command*
+
+__UNSPECIFIED VALUES:__
+`Command` - *It will instead opens a summary of avaible commands*
+
+__REQUIERED PERMISSIONS:__
+Application: `None`
+Caller: `None`
+"""
 
 	#==-----==#
 
@@ -58,10 +68,13 @@ class Help():
 					for i in entries:
 						if i == command:
 							entry = entries[i]()
-							embed.description = f"{entry.icon} __**/{entry.syntax}:**__\n__Aliases:__"
-							for i in entry.alias:
-								embed.description += f" `{i}`"
-							embed.description += f"\n\n{entry.description}"
+							embed.description = f"{entry.icon} __**/{entry.syntax}:**__"
+							if entry.alias and len(entry.alias) > 0:
+								embed.description += "\n__Aliases:__"
+								for i in entry.alias:
+									embed.description += f" `{i}`"
+							if entry.description and len(entry.description) > 0:
+								embed.description += f"\n{entry.description}"
 							await interaction.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
 							break
 					else:

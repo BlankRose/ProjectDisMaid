@@ -1,5 +1,5 @@
 import discord
-from src.core import construct
+from src.core import construct, predicates
 
 class Embed():
 
@@ -10,18 +10,37 @@ class Embed():
 	icon = "📟"
 
 	short = icon + " Creates a freshly new embed"
-	description = """Creates a freshly new basic embed anywhere with whichever content
-					you wish, which can be further edited later using the command
-					`embed_edit`, which gives even more controls over the design.\n
-					ARGUMENTS:
-					`Title` - *Text of the embed's header*
-					`Description` - *Content of the embed's body*
-					`Color` - *The color of the embed's sidebar, defined in Hexadecimal*\n
-					UNSPECIFIED VALUES:
-					`Title` - *Wont print anything but MUST be set if Description isn't*
-					`Description` - *Wont print anything but MUST be set if Title isn't*
-					`Color` - *Will give the default color*\n
-					"""
+	description = \
+"""
+Creates a freshly new basic embed anywhere with whichever content \
+you wish, which can be further edited later using the command \
+`embed_edit`, which gives even more controls over the design.
+
+__ARGUMENTS:__
+`Title` - *Text of the embed's header*
+`Description` - *Content of the embed's body*
+`Color` - *The color of the embed's sidebar, defined in Hexadecimal*
+
+__UNSPECIFIED VALUES:__
+`Title` - *Wont print anything but MUST be set if Description isn't*
+`Description` - *Wont print anything but MUST be set if Title isn't*
+`Color` - *Will give the default color*
+
+__SIDE NOTES:__
+Due to discord's limitations, embeds has their set limits as such:
+ - `Titles` are limited to **256** characters
+ - `Descriptions` are limited to **4096** characters
+ - `Embeds` can only contains up to **25** fields
+ - `Fields titles` are limited to **256** characters
+ - `Fields descriptions` are limited to **1024** characters
+ - `Footers` are limited to **2048** characters
+ - `Author name` is limited to **256** characters
+ - Finally, the total amount of characters cannot exceed **6000**
+
+__REQUIERED PERMISSIONS:__
+Application: `Send Messages`
+Caller: `Manage Messages`
+"""
 
 	#==-----==#
 
@@ -38,8 +57,16 @@ class Embed():
 				color = "Color of the embed in hexadecimal")
 			async def run(interaction: discord.Interaction, title: str = None, description: str = None, color: str = None):
 
+				if predicates.from_guild(interaction, False):
+					if not predicates.user_permissions(interaction, interaction.user, discord.Permissions(manage_messages = True)): return
+					if not predicates.app_permissions(interaction, discord.Permissions(send_messages = True)): return
+
 				if not title and not description:
 					await interaction.response.send_message("You need to specify atleast a title OR a description!", ephemeral = True)
+					return
+
+				if (title and len(title) > 256) or (description and len(description) > 4096):
+					await interaction.response.send_message("Due to discord's limitations, Titles are limited to 256 characters and Descriptions are limited to 4096!", ephemeral = True)
 					return
 
 				res = None

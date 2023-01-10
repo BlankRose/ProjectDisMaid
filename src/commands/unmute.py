@@ -10,17 +10,27 @@ class Unmute():
 	icon = "🔊"
 
 	short = icon + " Lift off any silence punishments"
-	description = """A basic command to unmute someone, giving them back the right
-					to talk. Did the mute finally calmed them down?\n
-					ARGUMENTS:
-					`User` - *User to target*
-					`DM` - *Wether or not we shall notify the user in their DMs*\n
-					UNSPECIFIED VALUES:
-					`DM` - *Will be treated as* `True`\n
-					SIDE NOTES:
-					If you went for role-based mutes and have changed to a different
-					roles, members who has been muted before hand might be still
-					muted. So watch out for that in case you can't unmute them!"""
+	description = \
+"""
+A basic command to unmute someone, giving them back the right \
+to talk. Did the mute finally calmed them down?
+
+__ARGUMENTS:__
+`User` - *User to target*
+`DM` - *Wether or not we shall notify the user in their DMs*
+
+__UNSPECIFIED VALUES:__
+`DM` - *Will be treated as* `True`
+
+__SIDE NOTES:__
+If you went for role-based mutes and have changed to a different \
+roles, members who has been muted before hand might be still \
+muted. So watch out for that in case you can't unmute them!
+
+__REQUIERED PERMISSIONS:__
+Application: `Moderate Members`
+Caller: `Moderate Members`
+"""
 
 	#==-----==#
 
@@ -38,7 +48,7 @@ class Unmute():
 
 				if not await predicates.from_guild(interaction): return
 				if not await predicates.is_member(interaction, user): return
-				if not await predicates.user_permissions(interaction, user, discord.Permissions(moderate_members = True)): return
+				if not await predicates.user_permissions(interaction, interaction.user, discord.Permissions(moderate_members = True)): return
 				if not await predicates.app_permissions(interaction, discord.Permissions(moderate_members = True)): return
 
 				target = interaction.guild.get_member(user.id)

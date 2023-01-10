@@ -9,9 +9,17 @@ class T():
 	icon = ""
 
 	short = icon + " "
-	description = """...\n
-					ARGUMENTS:
-					`None` - *Doesn't contains any arguments*"""
+	description = \
+"""
+... Here goes description ...
+
+__ARGUMENTS:__
+`None` - *Doesn't contains any arguments*
+
+__REQUIERED PERMISSIONS:__
+Application: `None`
+Caller: `None`
+"""
 
 	#==-----==#
 

@@ -12,22 +12,32 @@ class Random():
 	icon = "🎲"
 
 	short = icon + " Rolls a completely random sets of numbers"
-	description = """A somewhat balanced number randomizer which can receive multiple and
-					complex parameters for customized rollings. Look below for details:\n
-					ARGUMENTS:
-					`None` - *Generates one random number between 1 and 6*
-					`X` - *Generates `X` random numbers between 1 and 6*
-					`XdY` - *Generates `X` random numbers between 1 and `Y`*
-					`XdY..Z` - *Generates `X` random numbers between `Y` and `Z`*
-					`XdPATTERN` - *Generates `X` random numbers following given `PATTERN`*\n
-					UNSPECIFIED VALUES:
-					`X` - *Will becomes 1*
-					`Y` - *Will becomes 6 in XdY case or 0 in XdY..Z case*
-					`Z` - *Will becomes 0*\n
-					SIDE NOTES:
-					There can be multiple arguments, each seperated with spaces
-					`PATTERN` uses values seperated with commas, like here: `3,8,9,6,2`
-					`X` cannot be a negative value"""
+	description = \
+"""
+A somewhat balanced number randomizer which can receive multiple and \
+complex parameters for customized rollings. Look below for details:
+
+__ARGUMENTS:__
+`None` - *Generates one random number between 1 and 6*
+`X` - *Generates `X` random numbers between 1 and 6*
+`XdY` - *Generates `X` random numbers between 1 and `Y`*
+`XdY..Z` - *Generates `X` random numbers between `Y` and `Z`*
+`XdPATTERN` - *Generates `X` random numbers following given `PATTERN`*
+
+__UNSPECIFIED VALUES:__
+`X` - *Will becomes 1*
+`Y` - *Will becomes 6 in XdY case or 0 in XdY..Z case*
+`Z` - *Will becomes 0*
+
+__SIDE NOTES:__
+There can be multiple arguments, each seperated with spaces
+`PATTERN` uses values seperated with commas, like here: `3,8,9,6,2`
+`X` cannot be a negative value
+
+__REQUIERED PERMISSIONS:__
+Application: `None`
+Caller: `None`
+"""
 
 	#==-----==#
 

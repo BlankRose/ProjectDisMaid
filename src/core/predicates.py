@@ -48,16 +48,20 @@ async def member_permissions(interaction: discord.Interaction, user: discord.Mem
 		logging.warning("Trying to predicate permissions on non-existant member! BLOCKED")
 		return False
 
-	async def e():
+	async def e() -> bool:
 		if msg: await interaction.response.send_message("You don't has the sufficient permissions to execute this command!", ephemeral = True)
 		return False
+
+
+	cmp = user.guild_permissions
 
 	# The code below somehow doesn't works...
 	# Needs to think of a cleaner way to check every permissions
 	# cause ngl, the current below works but damn, what a forest
-	#if cmp.is_superset(perms): return await e()
 
-	cmp = user.guild_permissions
+	if cmp.is_superset(perms): return True
+	return await e()
+
 	if cmp.administrator: return True
 	if perms.administrator: return await e()
 	if perms.add_reactions and not cmp.add_reactions: return await e()
