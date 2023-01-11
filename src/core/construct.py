@@ -1,4 +1,5 @@
 import datetime
+import discord
 
 def max_time() -> datetime.datetime:
 	return datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)
@@ -36,3 +37,7 @@ def parse_hexa(data: str) -> int:
 		else:
 			return
 	return value
+
+async def reply(interaction: discord.Interaction, msg: str = None, ephemeral: bool = True) -> None:
+	if not msg: await interaction.response.send_message("Done!", ephemeral = True, delete_after = .0001)
+	else: await interaction.response.send_message(msg, ephemeral = ephemeral)

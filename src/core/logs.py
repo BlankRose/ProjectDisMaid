@@ -23,7 +23,7 @@ class Logs():
 
 	#==-----==#
 
-	def __init__(self, folder: str = "logs", file: str = "latest.log") -> None:
+	def __init__(self, folder: str = "logs", file: str = "latest.log"):
 		"""
 		Initialize a new log class object, with specified path to the `folder`
 		and of the name of the currently used `file`
@@ -38,7 +38,7 @@ class Logs():
 
 	#==-----==#
 
-	def clean(self, keep: int) -> None:
+	def clean(self, keep: int):
 		"""
 		Clear the folder referenced by `Logs.folder`, of all its logs except the current one
 		and the specified amount by `keep`
@@ -61,7 +61,7 @@ class Logs():
 
 	#==-----==#
 
-	def danger(msg: str):
+	def danger(self, msg: str):
 		"""
 		Uses logging to send a critical log, using `msg` as its output then abort the programm
 		

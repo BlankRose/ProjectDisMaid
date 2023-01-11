@@ -52,13 +52,7 @@ async def member_permissions(interaction: discord.Interaction, user: discord.Mem
 		if msg: await interaction.response.send_message("You don't has the sufficient permissions to execute this command!", ephemeral = True)
 		return False
 
-
 	cmp = user.guild_permissions
-
-	# The code below somehow doesn't works...
-	# Needs to think of a cleaner way to check every permissions
-	# cause ngl, the current below works but damn, what a forest
-
 	if cmp.is_superset(perms): return True
 	return await e()
 

@@ -30,16 +30,15 @@ Caller: `None`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
+
+		async def autocomplete(interaction: discord.Interaction, current: str) -> List[discord.app_commands.Choice[str]]:
+			return [
+				discord.app_commands.Choice(name = entry, value = entry)
+				for entry in entries if current.lower() in entry.lower()
+			]
+
 		registry = self.alias + [self.command]
 		for i in registry:
-
-	#==-----==#
-
-			async def autocomplete(interaction: discord.Interaction, current: str) -> List[discord.app_commands.Choice[str]]:
-				return [
-					discord.app_commands.Choice(name = entry, value = entry)
-					for entry in entries if current.lower() in entry.lower()
-				]
 
 	#==-----==#
 

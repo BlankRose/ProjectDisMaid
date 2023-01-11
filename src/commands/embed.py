@@ -57,9 +57,9 @@ Caller: `Manage Messages`
 				color = "Color of the embed in hexadecimal")
 			async def run(interaction: discord.Interaction, title: str = None, description: str = None, color: str = None):
 
-				if predicates.from_guild(interaction, False):
-					if not predicates.user_permissions(interaction, interaction.user, discord.Permissions(manage_messages = True)): return
-					if not predicates.app_permissions(interaction, discord.Permissions(send_messages = True)): return
+				if await predicates.from_guild(interaction, False):
+					if not await predicates.user_permissions(interaction, interaction.user, discord.Permissions(manage_messages = True)): return
+					if not await predicates.app_permissions(interaction, discord.Permissions(send_messages = True)): return
 
 				if not title and not description:
 					await interaction.response.send_message("You need to specify atleast a title OR a description!", ephemeral = True)

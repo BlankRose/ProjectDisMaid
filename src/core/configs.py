@@ -39,7 +39,7 @@ class Config():
 	
 	#==-----==#
 
-	def save(data: dict, folder: str, file: str) -> None:
+	def save(self, data: dict, folder: str, file: str) -> None:
 		"""
 		Save the `data` within the provided `file`, located inside the `folder`, for later use!
 
