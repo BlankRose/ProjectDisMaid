@@ -11,8 +11,8 @@ class Logs():
 	- `file`: string (path)
 
 	Methods:
-	- `_init_` (self, folder: str = "logs", file: str = "latest.log") -> None
-	- `clean` (self, keep: int) -> None
+	- `_init_` (folder: str = "logs", file: str = "latest.log") -> None
+	- `clean` (keep: int) -> None
 	- `danger` (msg: str) -> None
 	"""
 

@@ -36,7 +36,7 @@ class Config():
 				logging.warning("Couldn't fetch any data!")
 				return
 		logging.info("Successfully gathered data!")
-	
+
 	#==-----==#
 
 	def save(self, data: dict, folder: str, file: str) -> None:
@@ -55,7 +55,7 @@ class Config():
 				logging.warning("Couldn't save data!")
 				return
 		logging.info("Successfully saved data!")
-	
+
 	#==-----==#
 
 	def check(self, verify: dict, important: tuple, options: tuple) -> bool:
