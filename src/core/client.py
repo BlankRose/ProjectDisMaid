@@ -1,11 +1,11 @@
 from src.core import logs, configs
-import discord.app_commands as app
 from src import commands
 from pathlib import Path
+
+import discord.app_commands as app
 import logging as log
 import traceback
 import discord
-import logging
 
 class Client(discord.Client):
 	"""
@@ -38,15 +38,19 @@ class Client(discord.Client):
 		if not self.synced:
 			await self.cmds.sync()
 			self.synced = True
-		logging.info("The client is ready for usage!")
-
-	async def on_disconnect(self) -> None:
-		print("🎑\033[1;31m The maid has left the town.. \033[0m")
-		logging.info("The client and the connection has been terminated!")
+		log.info("The client is ready for usage!")
 
 	async def on_connect(self) -> None:
 		print("👒\033[1;32m The maid has came online! \033[0m")
-		logging.info("The client and the connection has been etablished!")
+		log.info("The client and the connection has been etablished!")
+
+	#==-----==#
+
+	async def close(self):
+		print("🎑\033[1;31m The maid has left the town.. \033[0m")
+		log.info("The client and the connection has been terminated!")
+		await self.async_cleanup()
+		await super().close()
 
 	#==-----==#
 
