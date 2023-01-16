@@ -40,7 +40,11 @@ class Client(discord.Client):
 			self.synced = True
 		log.info("The client is ready for usage!")
 
-	async def on_connect(self) -> None:
+	async def on_disconnect(self):
+		print("🎑\033[1;31m The maid has left the town.. \033[0m")
+		log.info("The client and the connection has been terminated!")
+
+	async def on_connect(self):
 		print("👒\033[1;32m The maid has came online! \033[0m")
 		log.info("The client and the connection has been etablished!")
 
@@ -49,7 +53,6 @@ class Client(discord.Client):
 	async def close(self):
 		print("🎑\033[1;31m The maid has left the town.. \033[0m")
 		log.info("The client and the connection has been terminated!")
-		await self.async_cleanup()
 		await super().close()
 
 	#==-----==#
@@ -93,6 +96,7 @@ def run(token: str) -> None:
 		if isinstance(error, app.CommandOnCooldown):
 			await interaction.response.send_message(f"Please, lemme relax a bit between tasks..\nI'll be avaible again for that in {error.retry_after}!")
 		else:
+			print("\033[1;31;2mWARNING: \033[0;1;31mAn error occured!\n\n", traceback.format_exc())
 			log.error(traceback.format_exc())
 
 	Client.cmds = cmds
