@@ -70,7 +70,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 						important=(("token", str),),
 						options=(("maxLogs", int, 5),))):
 		logs.Logs.danger("ABORTING..")
-
+	
 	info.clean(data["maxLogs"])
 	return (data["token"])
 
@@ -92,4 +92,7 @@ def run(token: str) -> None:
 			log.error(traceback.format_exc())
 
 	Client.cmds = cmds
-	bot.run(token)
+	try:
+		bot.run(token)
+	except:
+		log.error("The bot couldnt be started! Internet issues or Invalid Token?")
