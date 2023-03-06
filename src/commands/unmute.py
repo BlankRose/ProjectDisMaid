@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - unmute.py                             #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:10:15 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 from src.core import predicates
 import discord
 
@@ -44,20 +55,20 @@ Caller: `Moderate Members`
 			@discord.app_commands.describe(
 				user = "User to unmute",
 				dm = "Wether or not a notification should be sent")
-			async def run(interaction: discord.Interaction, user: discord.User, dm: bool = True):
+			async def run(ctx: discord.Interaction, user: discord.User, dm: bool = True):
 
-				if not await predicates.from_guild(interaction): return
-				if not await predicates.is_member(interaction, user): return
-				if not await predicates.user_permissions(interaction, interaction.user, discord.Permissions(moderate_members = True)): return
-				if not await predicates.app_permissions(interaction, discord.Permissions(moderate_members = True)): return
+				if not await predicates.from_guild(ctx): return
+				if not await predicates.is_member(ctx, user): return
+				if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(moderate_members = True)): return
+				if not await predicates.app_permissions(ctx, discord.Permissions(moderate_members = True)): return
 
-				target = interaction.guild.get_member(user.id)
+				target = ctx.guild.get_member(user.id)
 				try: await target.timeout(None)
 				except:
-					await interaction.response.send_message("I couldn't unmute the targetted user!", ephemeral = True)
+					await ctx.response.send_message("I couldn't unmute the targetted user!", ephemeral = True)
 					return
 
 				if dm:
 					channel = await user.create_dm()
-					await channel.send(f"Your timeout has been lifted in {interaction.guild.name}!")
-				await interaction.response.send_message(f"User {user.mention} has been successfully unmuted!", ephemeral = True)
+					await channel.send(f"Your timeout has been lifted in {ctx.guild.name}!")
+				await ctx.response.send_message(f"User {user.mention} has been successfully unmuted!", ephemeral = True)

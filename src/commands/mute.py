@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - mute.py                               #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:09:31 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 from src.core import predicates, construct
 import time as t
 import discord
@@ -52,37 +63,37 @@ Caller: `Moderate Members`
 				time = "Mute duration",
 				reason = "Reason of the mute",
 				dm = "Wether or not a notification should be sent")
-			async def run(interaction: discord.Interaction, user: discord.User, time: str, reason: str = None, dm: bool = True):
+			async def run(ctx: discord.Interaction, user: discord.User, time: str, reason: str = None, dm: bool = True):
 
-				if interaction.client.user == user:
-					await interaction.response.send_message("Why do you want me silenced so badly? ;w;'", ephemeral = True)
+				if ctx.client.user == user:
+					await ctx.response.send_message("Why do you want me silenced so badly? ;w;'", ephemeral = True)
 					return
 
-				if not await predicates.from_guild(interaction): return
-				if not await predicates.is_member(interaction, user): return
-				if not await predicates.user_permissions(interaction, user, discord.Permissions(moderate_members = True)): return
-				if not await predicates.app_permissions(interaction, discord.Permissions(moderate_members = True)): return
+				if not await predicates.from_guild(ctx): return
+				if not await predicates.is_member(ctx, user): return
+				if not await predicates.user_permissions(ctx, user, discord.Permissions(moderate_members = True)): return
+				if not await predicates.app_permissions(ctx, discord.Permissions(moderate_members = True)): return
 
-				if interaction.user == user:
-					await interaction.response.send_message("I don't think I can mute you.. But why would you mute yourself?", ephemeral = True)
+				if ctx.user == user:
+					await ctx.response.send_message("I don't think I can mute you.. But why would you mute yourself?", ephemeral = True)
 					return
 
-				target = interaction.guild.get_member(user.id)
+				target = ctx.guild.get_member(user.id)
 				tz = construct.parse_time(time)
 				if not tz:
-					await interaction.response.send_message(f"Couldn't parse the given time: {time}!", ephemeral = True)
+					await ctx.response.send_message(f"Couldn't parse the given time: {time}!", ephemeral = True)
 					return
 				limit = construct.parse_time("28d")
 				if tz > limit: tz = limit
 				try: await target.timeout(tz)
 				except:
-					await interaction.response.send_message("I couldn't mute the targetted user!", ephemeral = True)
+					await ctx.response.send_message("I couldn't mute the targetted user!", ephemeral = True)
 					return
 
 				if dm:
 					channel = await user.create_dm()
 					if reason:
-						await channel.send(f"You has been muted in {interaction.guild.name} until <t:{int(t.mktime(tz.timetuple()))}:R> for the following reason:\n{reason}")
+						await channel.send(f"You has been muted in {ctx.guild.name} until <t:{int(t.mktime(tz.timetuple()))}:R> for the following reason:\n{reason}")
 					else:
-						await channel.send(f"You has been muted in {interaction.guild.name} until <t:{int(t.mktime(tz.timetuple()))}:R>")
-				await interaction.response.send_message(f"User {user.mention} has been successfully muted until <t:{int(t.mktime(tz.timetuple()))}:R>!", ephemeral = True)
+						await channel.send(f"You has been muted in {ctx.guild.name} until <t:{int(t.mktime(tz.timetuple()))}:R>")
+				await ctx.response.send_message(f"User {user.mention} has been successfully muted until <t:{int(t.mktime(tz.timetuple()))}:R>!", ephemeral = True)

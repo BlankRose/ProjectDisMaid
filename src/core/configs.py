@@ -1,17 +1,37 @@
-import logging
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - configs.py                            #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 18:23:01 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import json
+import logging
 
 class Config():
+
 	"""
 	Config class to handle configurations files (stored in `.json` files)
 
-	Attributes:
-	- `data`: dict
+	Attributes
+	----------
+	data: `dict`
+		Dictionary of configuration
 
-	Methods:
-	- `fecth` (self, folder: str, file: str) -> None
-	- `save` (data: dict, folder: str, file: str) -> None
-	- `check` (data: dict, important: tuple, options: tuple) -> bool
+	Methods
+	-------
+	fetch(folder: `str`, file: `str`) -> `None`
+		Fetch the configuration from a given file
+	save(data: `dict`, folder: `str`, file: `str`) -> `None`
+		Saves the stored data within its configuration file
+		for later uses
+	check(data: `dict`, important: `tuple`, options: `tuple`) -> `bool`
+		Verify if the data does exists if important and is of right type and
+		emplace the missing options with default values
 	"""
 
 	#==-----==#

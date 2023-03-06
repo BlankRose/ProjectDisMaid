@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - template.py                           #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:09:51 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import discord
 
 class T():
@@ -30,5 +41,5 @@ Caller: `None`
 	#==-----==#
 
 			@cmd.command(name = i, description = self.short)
-			async def run(interaction: discord.Interaction):
-				await interaction.response.send_message("How did we get here..?", ephemeral = True)
+			async def run(ctx: discord.Interaction):
+				await ctx.response.send_message("How did we get here..?", ephemeral = True)

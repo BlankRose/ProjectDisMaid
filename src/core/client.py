@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - client.py                             #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:20:05 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 from src.core import logs, configs
 from src import commands
 from pathlib import Path
@@ -92,12 +103,15 @@ def run(token: str) -> None:
 		entries[i]().register(cmds, entries)
 
 	@cmds.error
-	async def cmd_error(interaction: discord.Interaction, error: app.AppCommandError):
+	async def cmd_error(ctx: discord.Interaction, error: app.AppCommandError):
 		if isinstance(error, app.CommandOnCooldown):
-			await interaction.response.send_message(f"Please, lemme relax a bit between tasks..\nI'll be avaible again for that in {error.retry_after}!")
+			await ctx.response.send_message(f"Please, lemme relax a bit between tasks..\nI'll be avaible again for that in {error.retry_after}!")
 		else:
 			print("\033[1;31;2mWARNING: \033[0;1;31mAn error occured!\n\n", traceback.format_exc())
 			log.error(traceback.format_exc())
 
 	Client.cmds = cmds
-	bot.run(token)
+	try:
+		bot.run(token)
+	except Exception as error:
+		log.error(error)

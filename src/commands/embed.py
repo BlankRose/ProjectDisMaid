@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - embed.py                              #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:07:20 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import discord
 from src.core import construct, predicates
 
@@ -6,7 +17,7 @@ class Embed():
 	command = "embed"
 	alias = []
 
-	syntax = command + " [Title] [Description] [Color]"
+	syntax = command + " [Channel] [Title] [Description] [Color]"
 	icon = "📟"
 
 	short = icon + " Creates a freshly new embed"
@@ -17,11 +28,13 @@ you wish, which can be further edited later using the command \
 `embed_edit`, which gives even more controls over the design.
 
 __ARGUMENTS:__
+`Channel` - *Channel where to post the new embed*
 `Title` - *Text of the embed's header*
 `Description` - *Content of the embed's body*
 `Color` - *The color of the embed's sidebar, defined in Hexadecimal*
 
 __UNSPECIFIED VALUES:__
+`Channel` - *Will post the embed in the current channel*
 `Title` - *Wont print anything but MUST be set if Description isn't*
 `Description` - *Wont print anything but MUST be set if Title isn't*
 `Color` - *Will give the default color*
@@ -55,18 +68,18 @@ Caller: `Manage Messages`
 				title = "Title of the embed",
 				description = "Description of the embed",
 				color = "Color of the embed in hexadecimal")
-			async def run(interaction: discord.Interaction, title: str = None, description: str = None, color: str = None):
+			async def run(ctx: discord.Interaction, channel: discord.TextChannel = None, title: str = None, description: str = None, color: str = None):
 
-				if await predicates.from_guild(interaction, False):
-					if not await predicates.user_permissions(interaction, interaction.user, discord.Permissions(manage_messages = True)): return
-					if not await predicates.app_permissions(interaction, discord.Permissions(send_messages = True)): return
+				if await predicates.from_guild(ctx, False):
+					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True)): return
+					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True)): return
 
 				if not title and not description:
-					await interaction.response.send_message("You need to specify atleast a title OR a description!", ephemeral = True)
+					await construct.reply(ctx, "You need to specify atleast a title OR a description!")
 					return
 
 				if (title and len(title) > 256) or (description and len(description) > 4096):
-					await interaction.response.send_message("Due to discord's limitations, Titles are limited to 256 characters and Descriptions are limited to 4096!", ephemeral = True)
+					await construct.reply(ctx, "Due to discord's limitations, Titles are limited to 256 characters and Descriptions are limited to 4096!")
 					return
 
 				res = None
@@ -74,14 +87,15 @@ Caller: `Manage Messages`
 					if len(color) <= 6:
 						res = construct.parse_hexa(color)
 						if not res:
-							await interaction.response.send_message("Invalid color code given in parameter!", ephemeral = True)
-					else:	await interaction.response.send_message("Color value must be at maximum 6 character long!", ephemeral = True)
+							await construct.reply(ctx, "Invalid color code given in parameter!")
+					else:	await construct.reply(ctx, "Color value must be at maximum 6 character long!")
 
-				a = discord.Embed(
+				new_embed = discord.Embed(
 					title = title,
 					description = description,
 					color = res
 				)
 
-				await interaction.channel.send(embed = a)
-				await interaction.response.send_message("Done!", delete_after = .001, ephemeral = True)
+				if channel:	await channel.send(embed = new_embed)
+				else:		await ctx.channel.send(embed = new_embed)
+				await construct.reply(ctx)

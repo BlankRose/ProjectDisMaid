@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - help.py                               #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:09:15 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 from typing import List
 from src.commands import *
 import discord
@@ -31,7 +42,7 @@ Caller: `None`
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 
-		async def autocomplete(interaction: discord.Interaction, current: str) -> List[discord.app_commands.Choice[str]]:
+		async def autocomplete(ctx: discord.Interaction, current: str) -> List[discord.app_commands.Choice[str]]:
 			return [
 				discord.app_commands.Choice(name = entry, value = entry)
 				for entry in entries if current.lower() in entry.lower()
@@ -45,7 +56,7 @@ Caller: `None`
 			@cmd.command(name = i, description = self.short)
 			@discord.app_commands.describe(command = "The command to check")
 			@discord.app_commands.autocomplete(command = autocomplete)
-			async def run(interaction: discord.Interaction, command: str = None):
+			async def run(ctx: discord.Interaction, command: str = None):
 				embed = discord.embeds.Embed()
 				embed.color = 0xb842ae
 				embed.title = "**Maids' Guidelines**"
@@ -61,7 +72,7 @@ Caller: `None`
 							name = f"/{entry.syntax}",
 							value = entry.short,
 							inline = False )
-					await interaction.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True)
+					await ctx.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True)
 
 				else:
 					for i in entries:
@@ -74,7 +85,7 @@ Caller: `None`
 									embed.description += f" `{i}`"
 							if entry.description and len(entry.description) > 0:
 								embed.description += f"\n{entry.description}"
-							await interaction.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
+							await ctx.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
 							break
 					else:
-						await interaction.response.send_message("Sorry, I didn't found any entry in the guidelines.", ephemeral = True)
+						await ctx.response.send_message("Sorry, I didn't found any entry in the guidelines.", ephemeral = True)

@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - construct.py                          #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:15:02 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import datetime
 import discord
 
@@ -38,6 +49,6 @@ def parse_hexa(data: str) -> int:
 			return
 	return value
 
-async def reply(interaction: discord.Interaction, msg: str = None, ephemeral: bool = True) -> None:
-	if not msg: await interaction.response.send_message("Done!", ephemeral = True, delete_after = .0001)
-	else: await interaction.response.send_message(msg, ephemeral = ephemeral)
+async def reply(ctx: discord.Interaction, msg: str = None, ephemeral: bool = True) -> None:
+	if not msg: await ctx.response.send_message("Task completed!", ephemeral = ephemeral, delete_after = 10)
+	else: await ctx.response.send_message(msg, ephemeral = ephemeral)

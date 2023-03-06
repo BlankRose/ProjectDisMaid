@@ -1,5 +1,17 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - hello.py                              #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:08:12 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import discord
 import random as rng
+from src.core import construct
 
 class Hello():
 
@@ -32,7 +44,7 @@ Caller: `None`
 	#==-----==#
 
 			@cmd.command(name = i, description = self.short)
-			async def run(interaction: discord.Interaction):
+			async def run(ctx: discord.Interaction):
 				caseA = ["Hai sweetheart~",
 						"Hello there~",
 						"Hoi!"]
@@ -42,4 +54,4 @@ Caller: `None`
 						"Would you like some cookies?",
 						"Have you seen my cat? I can't find it anywhere."]
 				strB = caseB[rng.randrange(0, len(caseB))]
-				await interaction.response.send_message(f"{strA}\n{strB}", ephemeral=True)
+				await construct.reply(ctx, f"{strA}\n{strB}")

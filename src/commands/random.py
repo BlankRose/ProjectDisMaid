@@ -1,3 +1,14 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - random.py                             #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 17:09:43 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 import logging
 import discord
 import random as rng
@@ -121,7 +132,7 @@ Caller: `None`
 
 			@cmd.command(name = i, description = self.short)
 			@discord.app_commands.describe(arguments = f"List of random sets (/help {self.command} for details)")
-			async def run(interaction: discord.Interaction, arguments: str = None):
+			async def run(ctx: discord.Interaction, arguments: str = None):
 
 				args = []
 				if arguments:
@@ -131,13 +142,13 @@ Caller: `None`
 					for i in args:
 						cur = self.parseArgs(i)
 						if (int(cur[0]) < 0):
-							await interaction.response.send_message(f"I cant understand your request..\nPlease look up the syntax with `/help {self.command}`!", ephemeral = True)
+							await ctx.response.send_message(f"I cant understand your request..\nPlease look up the syntax with `/help {self.command}`!", ephemeral = True)
 							return
 						res.append(cur)
 
 				embed = discord.embeds.Embed()
 				embed.color = 0xEB9234
-				embed.title = f"**{interaction.user.display_name}'s Roll Results**"
+				embed.title = f"**{ctx.user.display_name}'s Roll Results**"
 				file = discord.File("assets/dices.png", filename="dices.png")
 				embed.set_thumbnail(url="attachment://dices.png")
 
@@ -149,4 +160,4 @@ Caller: `None`
 							inline = True )
 				else:
 					embed.description = self.displayRoll(self.newRoll((1, 1, 6)))
-				await interaction.response.send_message("I've noted down your results below:", file = file, embed = embed)
+				await ctx.response.send_message("I've noted down your results below:", file = file, embed = embed)

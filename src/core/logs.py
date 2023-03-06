@@ -1,19 +1,38 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - logs.py                               #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Mon Mar  6 18:18:11 CET 2023      #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
 from pathlib import Path
 import logging
 import os
 
 class Logs():
+
 	"""
 	Logging class for easier handling with the `logging` module
 
-	Attributes:
-	- `folder`: string (path)
-	- `file`: string (path)
+	Attributes
+	----------
+	folder: `string`
+		Folder path where is located the logs files
+	file: `string`
+		File path where of the current target logs file
 
-	Methods:
-	- `_init_` (folder: str = "logs", file: str = "latest.log") -> None
-	- `clean` (keep: int) -> None
-	- `danger` (msg: str) -> None
+	Methods
+	-------
+	_init_(folder: `str`, file: `str`) -> `None`
+		Initializes the logging class
+	clean(keep: `int`) -> `None`
+		Cleans older files, defined by the configuration
+	danger(msg: `str`) -> `None`
+		Logs out an critical message and abort the programm
 	"""
 
 	#==-----==#
