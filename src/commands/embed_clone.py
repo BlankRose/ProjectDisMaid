@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:34:59 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 15:51:49 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
-from src.core import construct, predicates
+from src.utils import construct, predicates
 
-class Embed_clone():
+class Embed_Clone():
 
 	command = "embed_clone"
 	alias = ["embed_duplicate", "embed_dup"]
@@ -23,9 +23,9 @@ class Embed_clone():
 	short = icon + " Duplicates an already existing embed"
 	description = \
 """
-Duplicates an already existing embed into another in the same channel
-or in another channel. This tool can be used as a way in case you prepared
-the embed in a test channel and wants to exports it in a public channel or
+Duplicates an already existing embed into another in the same channel \
+or in another channel. This tool can be used as a way in case you prepared \
+the embed in a test channel and wants to exports it in a public channel or \
 if you wanna modify it without changing the original.
 
 __ARGUMENTS:__

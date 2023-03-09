@@ -5,13 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:08:12 CET 2023      #
+#       //\   /         Last Updated: Mon Mar  6 18:12:53 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
 import random as rng
-from src.core import construct
+from src.utils import construct
 
 class Hello():
 

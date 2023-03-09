@@ -5,11 +5,11 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:09:31 CET 2023      #
+#       //\   /         Last Updated: Mon Mar  6 18:13:04 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core import predicates, construct
+from src.utils import predicates, construct
 import time as t
 import discord
 

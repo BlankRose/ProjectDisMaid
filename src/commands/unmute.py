@@ -5,11 +5,11 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:10:15 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 17:14:20 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core import predicates
+from src.utils import predicates
 import discord
 
 class Unmute():

@@ -5,12 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:07:20 CET 2023      #
+#       //\   /         Last Updated: Mon Mar  6 18:12:49 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
-from src.core import construct, predicates
+from src.utils import construct, predicates
 
 class Embed():
 

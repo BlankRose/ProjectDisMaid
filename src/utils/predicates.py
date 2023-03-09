@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:15:11 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 17:13:15 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import logging
 import discord
 
-from src.core.construct import reply
+from src.utils.construct import reply
 
 async def from_guild(ctx: discord.Interaction, msg: bool = True) -> bool:
 	"""

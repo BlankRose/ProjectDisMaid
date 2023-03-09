@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Jan 13 19:51:02 CET 2023      #
+#       //\   /         Last Updated: Mon Mar  6 18:13:42 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,6 +14,7 @@ import logging
 import pandas
 
 class Database():
+
 	"""
 	Database class to handles anything related to storing data,
 	using Pandas module

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:15:02 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 14:44:12 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -52,3 +52,20 @@ def parse_hexa(data: str) -> int:
 async def reply(ctx: discord.Interaction, msg: str = None, ephemeral: bool = True) -> None:
 	if not msg: await ctx.response.send_message("Task completed!", ephemeral = ephemeral, delete_after = 10)
 	else: await ctx.response.send_message(msg, ephemeral = ephemeral)
+
+def import_entries(imports: list, dir: str):
+	"""
+	Imports and returns a list of imported elements
+	"""
+	import importlib, sys
+
+	if not dir: dir = ""
+	if len(dir) > 0 and not dir.endswith("."):
+		dir += "."
+
+	entries: dict[str, ] = {}
+	for i in imports:
+		name = dir + i
+		importlib.import_module(name)
+		entries[i] = getattr(sys.modules[name], i.title())
+	return entries

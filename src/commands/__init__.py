@@ -5,19 +5,16 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 16:38:43 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 15:57:19 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-__all__ = ["hello", "random", "mute", "unmute", "embed", "embed_edit", "embed_clone"]
+__all__ = ["hello", "random", "mute", "unmute", "embed", "embed_edit", "embed_clone", "debug"]
 
+from src.utils.construct import import_entries
 from src.commands import help
-import importlib
-import sys
 
-entries = {}
+categories: list = ["messages"]
+
 __all__.append("help")
-for i in __all__:
-	name = "src.commands." + i
-	importlib.import_module(name)
-	entries[i] = getattr(sys.modules[name], i.capitalize())
+entries = import_entries(__all__, "src.commands")

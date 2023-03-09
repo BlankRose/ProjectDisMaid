@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:09:15 CET 2023      #
+#       //\   /         Last Updated: Tue Mar  7 15:40:53 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -37,6 +37,13 @@ __REQUIERED PERMISSIONS:__
 Application: `None`
 Caller: `None`
 """
+
+	#==-----==#
+
+	class Selector(discord.ui.View):
+
+		def __init__(self, *, timeout: float = 180):
+			super().__init__(timeout=timeout)
 
 	#==-----==#
 
@@ -73,6 +80,11 @@ Caller: `None`
 							value = entry.short,
 							inline = False )
 					await ctx.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True)
+
+					selector = discord.ui.Select()
+					selector.add_option(label = "System Messages", value = "messages", description = "Commands to control system messages handled by the maid", emoji = "📟")
+					view = discord.ui.View()
+					view.add_item(selector)
 
 				else:
 					for i in entries:
