@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Mar  7 18:47:14 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 14:10:51 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -43,11 +43,11 @@ Caller: `None`
 
 		def __init__(self, ctx: discord.Interaction, *, timeout: float = 180):
 			super().__init__(timeout=timeout)
-			self.ctx = ctx
+			self.origin = ctx
 
 		@discord.ui.select(options=[discord.SelectOption(label = x) for x in options])
 		async def callback(self, ctx: discord.Interaction, select: discord.ui.Select):
-			await self.ctx.edit_original_response(content = f"Selected: {select.values[0]}")
+			await self.origin.edit_original_response(content = f"Selected: {select.values[0]}")
 			await ctx.response.send_message("Updated!", delete_after = 0)
 
 	#==-----==#

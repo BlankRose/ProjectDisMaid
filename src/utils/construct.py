@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Mar  7 14:44:12 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 14:26:05 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -53,7 +53,7 @@ async def reply(ctx: discord.Interaction, msg: str = None, ephemeral: bool = Tru
 	if not msg: await ctx.response.send_message("Task completed!", ephemeral = ephemeral, delete_after = 10)
 	else: await ctx.response.send_message(msg, ephemeral = ephemeral)
 
-def import_entries(imports: list, dir: str):
+def import_entries(imports: list, dir: str = ""):
 	"""
 	Imports and returns a list of imported elements
 	"""
