@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:20:05 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 20:13:10 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -29,6 +29,17 @@ class Client(discord.Client):
 	#==-----==#
 
 	cmds = None
+	description = \
+"""
+Just a silly maid mouse for all of your needs~
+
+This project was made to come with as many features as \
+you could see on many bots while being fully free to use, \
+without any paywalls or any voting requirements.
+
+Support server: https://discord.gg/YDvpNYCcQf
+Source (Github): https://github.com/BlankRose/ProjectDisMaid
+"""
 
 	#==-----==#
 

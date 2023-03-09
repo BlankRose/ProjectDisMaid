@@ -1,12 +1,20 @@
 # ********************************************************************* #
 #          .-.                                                          #
 #    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   DisMaid - b.py                                  #
+#   (  `'.\   /.'`  )   DisMaid - __init__.py                           #
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 14:46:04 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 19:06:59 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-entries = {'d': 0, 'e': 3, 'f': 4}
+from src.utils.construct import import_entries
+class Scripts:
+
+	__all__ = ["hello", "random"]
+	entries = import_entries(__all__, "src.commands.scripts")
+
+	icon = "🎲"
+	title = "Utilities & Entertainment"
+	description = "Commands mostly here to diversify a bit the server"

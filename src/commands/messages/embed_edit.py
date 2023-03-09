@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Mar  7 14:44:29 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 20:16:16 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -17,7 +17,7 @@ class Embed_Edit():
 	command = "embed_edit"
 	alias = []
 
-	syntax = command + " <Message ID> <Sub Command> ..."
+	syntax = command + " <Message ID> <Sub Command> [Channel] ..."
 	icon = "📟"
 
 	short = icon + " Edits an already existing embed"

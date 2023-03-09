@@ -5,22 +5,18 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 14:42:35 CET 2023      #
+#       //\   /         Last Updated: Thu Mar  9 18:13:50 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.utils.construct import import_entries
-from src.commands import help
 
-import src.commands.messages as msg
+root = "src.commands"
+categories: list = ["admin", "messages", "scripts"]
+non_categorized: list = ["help"]
 
-__all__ = ["random", "mute", "unmute", "debug"]
-__all__.append("help")
+category_details = import_entries(categories, root)
+entries = import_entries(non_categorized, root)
 
-categories: list = ["messages"]
-sub_entries = import_entries(categories, "src.commands")
-
-entries = import_entries(__all__, "src.commands")
-
-a = {k: v for d in (entries, msg.entries) for k, v in d.items()}
-entries = {**entries, **msg.entries}
+sub_entries = {**{None: entries}, **{k: category_details[k]().entries for k in categories}}
+entries = {k: v for i in categories for d in (sub_entries[i], entries) for k, v in d.items()}
