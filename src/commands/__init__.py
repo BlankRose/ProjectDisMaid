@@ -5,18 +5,26 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 18:13:50 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 15:51:15 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from typing import Any
 from src.utils.construct import import_entries
 
-root = "src.commands"
-categories: list = ["admin", "messages", "scripts"]
-non_categorized: list = ["help"]
+#-- TYPE HINTS --#
 
-category_details = import_entries(categories, root)
-entries = import_entries(non_categorized, root)
+_entry_t                    = dict[str, Any]
+_sub_t                      = dict[str | None, _entry_t]
 
-sub_entries = {**{None: entries}, **{k: category_details[k]().entries for k in categories}}
-entries = {k: v for i in categories for d in (sub_entries[i], entries) for k, v in d.items()}
+#-- DEFINITIONS --#
+
+root: str                   = "src.commands"
+categories: list[str]       = ["admin", "messages", "scripts"]
+non_categorized: list[str]  = ["help"]
+
+category_details: _entry_t  = import_entries(categories, root)
+entries: _entry_t           = import_entries(non_categorized, root)
+
+sub_entries: _sub_t         = {**{None: entries}, **{k: category_details[k]().entries for k in categories}}
+entries: _entry_t           = {k: v for i in categories for d in (sub_entries[i], entries) for k, v in d.items()}

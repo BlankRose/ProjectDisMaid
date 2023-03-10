@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 20:16:16 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 15:58:41 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -177,18 +177,18 @@ Caller: `Manage Messages`
 				if not embed:
 					return await construct.reply(ctx, "The specified message doesn't contains any embed! You can create one with `/embed`.")
 
+				total = self.count_fields(embed)
+				len_current = self.count_character(embed)
+
+				match sub_command:
+
 				# ############################## #
 				#                                #
 				#       ADDITIONS COMMANDS       #
 				#                                #
 				# ############################## #
 
-				total = self.count_fields(embed)
-				len_current = self.count_character(embed)
-
-				if sub_command.startswith("add_"):
-
-					if sub_command == "add_field":
+					case "add_field":
 						if not title and not description:
 							return await construct.reply(ctx, "You need to specify atleast a Title OR a Description!")
 						if (title and len(title) > 256) or (description and len(description) > 1024):
@@ -205,7 +205,7 @@ Caller: `Manage Messages`
 							inline = inline
 						)
 
-					elif sub_command == "add_footer":
+					case "add_footer":
 						if not description:
 							return await construct.reply(ctx, "You need to specify a Description!")
 						if len(description) > 2048:
@@ -215,7 +215,7 @@ Caller: `Manage Messages`
 							icon_url = image_url
 						)
 
-					elif sub_command == "add_author":
+					case "add_author":
 						if not description:
 							return await construct.reply(ctx, "You need to specify a Description!")
 						if len(description) > 256:
@@ -231,9 +231,7 @@ Caller: `Manage Messages`
 				#                                #
 				# ############################## #
 
-				elif sub_command.startswith("set_"):
-
-					if sub_command == "set_body":
+					case "set_body":
 						if not title and not description:
 							return await construct.reply(ctx, "You need to specify atleast a Title OR a Description!")
 						if (title and len(title) > 256) or (description and len(description) > 4096):
@@ -241,7 +239,7 @@ Caller: `Manage Messages`
 						embed.title = title
 						embed.description = description
 
-					elif sub_command == "set_field":
+					case "set_field":
 						if not title and not description:
 							return await construct.reply(ctx, "You need to specify atleast a Title OR a Description!")
 						if (title and len(title) > 256) or (description and len(description) > 1024):
@@ -257,10 +255,10 @@ Caller: `Manage Messages`
 							inline = inline
 						)
 
-					elif sub_command == "set_thumbnail":
+					case "set_thumbnail":
 						embed.set_thumbnail(url = image_url)
 
-					elif sub_command == "set_title":
+					case "set_title":
 						if not title:
 							return await construct.reply(ctx, "You need to specify the Title!")
 						if len(title) > 256:
@@ -272,7 +270,7 @@ Caller: `Manage Messages`
 						else:
 							embed.fields[index - 1].name = title
 
-					elif sub_command == "set_description":
+					case "set_description":
 						if not description:
 							return await construct.reply(ctx, "You need to specify the Title!")
 						if not index:
@@ -286,7 +284,7 @@ Caller: `Manage Messages`
 								return await construct.reply(ctx, "You cannot exceed 1024 characters for descriptions!")
 							embed.fields[index - 1].value = description
 
-					elif sub_command == "set_color":
+					case "set_color":
 						color: int
 						if title:
 							color = construct.parse_hexa(title)
@@ -304,16 +302,14 @@ Caller: `Manage Messages`
 				#                                #
 				# ############################## #
 
-				elif sub_command.startswith("del_"):
-
-					if sub_command == "del_field":
+					case "del_field":
 						if not index:
 							return await construct.reply(ctx, "Please specify an index!")
 						if index > 0 and index <= total:
 							return await construct.reply(ctx, "There is no fields at the specified index!")
 						embed.remove_field(index - 1)
 
-					elif sub_command == "del_title":
+					case "del_title":
 						if not index:
 							if not embed.description:
 								return await construct.reply(ctx, "There needs to be atleast a Title or Description!")
@@ -325,7 +321,7 @@ Caller: `Manage Messages`
 								return await construct.reply(ctx, "There needs to be atleast a Title or Description!")
 							embed.fields[index - 1].name = None
 
-					elif sub_command == "del_description":
+					case "del_description":
 						if not index:
 							if not embed.title:
 								return await construct.reply(ctx, "There needs to be atleast a Title or Description!")
@@ -337,13 +333,13 @@ Caller: `Manage Messages`
 								return await construct.reply(ctx, "There needs to be atleast a Title or Description!")
 							embed.fields[index - 1].value = None
 
-					elif sub_command == "del_footer":
+					case "del_footer":
 						embed.remove_footer()
 
-					elif sub_command == "del_author":
+					case "del_author":
 						embed.remove_author()
 
-					elif sub_command == "del_all_fields":
+					case "del_all_fields":
 						embed.clear_fields()
 
 				# ############################## #
@@ -352,10 +348,10 @@ Caller: `Manage Messages`
 				#                                #
 				# ############################## #
 
-				elif sub_command == "get_color":
-					if not embed.color:
-						return await construct.reply(ctx, "Target embed's color is not defined!")
-					return await construct.reply(ctx, f"Target embed's color: 0x{hex(embed.color.value)[2:].upper()}")
+					case "get_color":
+						if not embed.color:
+							return await construct.reply(ctx, "Target embed's color is not defined!")
+						return await construct.reply(ctx, f"Target embed's color: 0x{hex(embed.color.value)[2:].upper()}")
 
 				# ############################## #
 				#                                #

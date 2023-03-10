@@ -5,13 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 20:13:10 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 15:25:03 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core import logs, configs
 from src import commands
 from pathlib import Path
+import sys
 
 import discord.app_commands as app
 import logging as log
@@ -64,17 +65,17 @@ Source (Github): https://github.com/BlankRose/ProjectDisMaid
 
 	async def on_disconnect(self):
 		print("🎑\033[1;31m The maid has left the town.. \033[0m")
-		log.info("The client and the connection has been terminated!")
+		log.info("The connection has been terminated!")
 
 	async def on_connect(self):
 		print("👒\033[1;32m The maid has came online! \033[0m")
-		log.info("The client and the connection has been etablished!")
+		log.info("The connection has been etablished!")
 
 	#==-----==#
 
 	async def close(self):
 		print("🎑\033[1;31m The maid has left the town.. \033[0m")
-		log.info("The client and the connection has been terminated!")
+		log.info("The connection has been terminated!")
 		await super().close()
 
 	#==-----==#
@@ -90,6 +91,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 	logs.Logs.folder = info.folder
 	logs.Logs.file = info.file
 	log.debug("Logs setup complete!..")
+	log.debug(f"Running under python {sys.version}")
 
 	config = configs.Config()
 	config.fetch(cwd, config_file)
@@ -99,7 +101,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 						important=(("token", str),),
 						options=(("maxLogs", int, 5),))):
 		logs.Logs.danger("ABORTING..")
-	
+
 	info.clean(data["maxLogs"])
 	return (data["token"])
 

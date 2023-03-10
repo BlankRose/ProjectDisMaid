@@ -5,9 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Jan 10 17:06:23 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 15:25:27 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
+
+import sys
+if sys.version_info[0] < 3:		exit(print(f"Python >= 3.10 requierd!\nCurrently using: {sys.version}"))
+if sys.version_info[1] < 10:	exit(print(f"Python >= 3.10 requierd!\nCurrently using: {sys.version}"))
 
 from src.core import client
 from datetime import datetime

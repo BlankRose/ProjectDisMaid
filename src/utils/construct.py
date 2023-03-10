@@ -5,37 +5,67 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 15:41:33 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 14:56:09 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from typing import Any
 import datetime
 import discord
 
 def max_time() -> datetime.datetime:
+	"""
+	Returns the max datatime supported by Python (Year 10000 - 1 us)
+	"""
 	return datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)
 
-def parse_time(time: str) -> datetime.datetime:
+def parse_time(time: str) -> datetime.datetime | None:
+	"""
+	Parse given time into a datetime and returns it.
+	Upon error, it returns NONE
+
+	_y_w_d_h_m_s_u:
+	 - A series of int-time pair which can contains:
+	 - y = years
+	 - w = weeks
+	 - d = days
+	 - h = hours
+	 - m = minutes
+	 - s = seconds
+	 - u = microseconds
+
+	int:
+	 - Creates from timestamp
+
+	"inf"/"infinite":
+	 - Returns the max_time() value
+	"""
 	time = time.replace(" ", "").replace("	", "")
 	if time.lower() == "inf" or time.lower() == "infinite": return max_time()
 	result = datetime.datetime.now().astimezone()
 	tmp = ""
-	for i in time:
-		if i.isdigit(): tmp += i
-		else:
-			if i != 'y' and i != 'd' and i != 'h' and i != 'm' and i != 's': return
-			try:
-				if tmp == "": continue
-				if i == 'y': result += datetime.timedelta(days = int(tmp) * 365)
-				if i == 'd': result += datetime.timedelta(days = int(tmp))
-				if i == 'h': result += datetime.timedelta(hours = int(tmp))
-				if i == 'm': result += datetime.timedelta(minutes = int(tmp))
-				if i == 's': result += datetime.timedelta(seconds = int(tmp))
-			except OverflowError: return
-			tmp = ""
+	if time.isdecimal():
+		result = datetime.datetime.fromtimestamp(float(time))
+	else:
+		for i in time:
+			if i.isdigit(): tmp += i
+			else:
+				try:
+					if tmp == "": continue
+					match i:
+						case 'y': result += datetime.timedelta(days = int(tmp) * 365.24)
+						case 'w': result += datetime.timedelta(weeks = int(tmp))
+						case 'd': result += datetime.timedelta(days = int(tmp))
+						case 'h': result += datetime.timedelta(hours = int(tmp))
+						case 'm': result += datetime.timedelta(minutes = int(tmp))
+						case 's': result += datetime.timedelta(seconds = int(tmp))
+						case 'u': result += datetime.timedelta(microseconds = int(tmp))
+						case _: return
+				except OverflowError: return
+				tmp = ""
 	return result
 
-def parse_hexa(data: str) -> int:
+def parse_hexa(data: str) -> int | None:
 	value = 0
 	for i in data:
 		value *= 16
@@ -53,9 +83,9 @@ async def reply(ctx: discord.Interaction, msg: str = None, ephemeral: bool = Tru
 	if not msg: await ctx.response.send_message("Task completed!", ephemeral = ephemeral, delete_after = 10)
 	else: await ctx.response.send_message(msg, ephemeral = ephemeral)
 
-def import_entries(imports, dir: str = ""):
+def import_entries(imports: dict[str, str | list[str]] | list[str], dir: str = "") -> dict[str, Any]:
 	"""
-	Imports and returns a list of imported elements.
+	Imports and returns a dictionary of imported elements.
 
 	When using a list, it will try to find the name of the element to import with
 	the same, in title, as of the module
@@ -70,7 +100,7 @@ def import_entries(imports, dir: str = ""):
 	if len(dir) > 0 and not dir.endswith("."):
 		dir += "."
 
-	entries: dict[str, ] = {}
+	entries: dict[str, Any] = {}
 	if type(imports) is list:
 		for i in imports:
 			name = dir + i

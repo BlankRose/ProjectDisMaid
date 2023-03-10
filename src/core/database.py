@@ -5,13 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:13:42 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 15:14:13 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from pathlib import Path
 import logging
-import pandas
+import pandas as pd
 
 class Database():
 
@@ -32,7 +32,7 @@ class Database():
 	file: str = None
 
 	entries = ['id']
-	db: pandas.DataFrame = None
+	db: pd.DataFrame = None
 	data: ... = None
 
 	#==-----==#
@@ -60,5 +60,4 @@ class Database():
 		Database.file = file
 		if not Path.exists(file):
 			Database.db = None
-		Database.db = pandas.read_csv(file)
-		return 
+		Database.db = pd.read_csv(file)
