@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:12:53 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,14 +15,14 @@ from src.utils import construct
 
 class Hello():
 
-	command = "hello"
-	alias = ["hai"]
+	COMMAND = "hello"
+	ALIAS = ["hai"]
 
-	syntax = command
-	icon = "💬"
+	SYNTAX = COMMAND
+	ICON = "💬"
 
-	short = icon + " Giving a warm welcome to the maid is always appreciable"
-	description = \
+	SHORT = ICON + " Giving a warm welcome to the maid is always appreciable"
+	DESCRIPTION = \
 """
 Giving out a warm welcome to the hard working maid is always \
 appreciated and means a lot to them!~ xoxo~
@@ -38,12 +38,12 @@ Caller: `None`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			async def run(ctx: discord.Interaction):
 				caseA = ["Hai sweetheart~",
 						"Hello there~",

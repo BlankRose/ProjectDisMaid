@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:13:04 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:02:18 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,14 +15,14 @@ import discord
 
 class Mute():
 
-	command = "mute"
-	alias = ["silence", "timeout"]
+	COMMAND = "mute"
+	ALIAS = ["silence", "timeout"]
 
-	syntax = command + " <User> [Time] [Reason] [DM]"
-	icon = "🔇"
+	SYNTAX = COMMAND + " <User> [Time] [Reason] [DM]"
+	ICON = "🔇"
 
-	short = icon + " Silence anyone who is being nasty"
-	description = \
+	SHORT = ICON + " Silence anyone who is being nasty"
+	DESCRIPTION = \
 """
 A basic command to mute someone with some extra parameters to \
 work around. We hope muting can calm those nasty poeple..
@@ -52,12 +52,12 @@ Caller: `Moderate Members`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			@discord.app_commands.describe(
 				user = "User to mute",
 				time = "Mute duration",

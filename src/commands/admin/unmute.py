@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Mar  7 17:14:20 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,14 +14,14 @@ import discord
 
 class Unmute():
 
-	command = "unmute"
-	alias = ["demute"]
+	COMMAND = "unmute"
+	ALIAS = ["demute"]
 
-	syntax = command + " <User> [DM]"
-	icon = "🔊"
+	SYNTAX = COMMAND + " <User> [DM]"
+	ICON = "🔊"
 
-	short = icon + " Lift off any silence punishments"
-	description = \
+	SHORT = ICON + " Lift off any silence punishments"
+	DESCRIPTION = \
 """
 A basic command to unmute someone, giving them back the right \
 to talk. Did the mute finally calmed them down?
@@ -46,12 +46,12 @@ Caller: `Moderate Members`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			@discord.app_commands.describe(
 				user = "User to unmute",
 				dm = "Wether or not a notification should be sent")

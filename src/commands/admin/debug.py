@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 14:10:51 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:22 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,14 +14,14 @@ from src.utils import construct
 
 class Debug():
 
-	command = "debug"
-	alias = []
+	COMMAND = "debug"
+	ALIAS = []
 
-	syntax = command
-	icon = "⚠️"
+	SYNTAX = COMMAND
+	ICON = "⚠️"
 
-	short = icon + " Testing purpose command"
-	description = \
+	SHORT = ICON + " Testing purpose command"
+	DESCRIPTION = \
 """
 Testing purpose command..
 This is usually unstable and may not responds \
@@ -53,12 +53,12 @@ Caller: `None`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			async def run(ctx: discord.Interaction):
 
 				if ctx.user.id != 353435819924652043:

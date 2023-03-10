@@ -5,25 +5,26 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:09:43 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:52:23 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import logging
 import discord
 import random as rng
+import numpy as np
 import math
 
 class Random():
 
-	command = "random"
-	alias = ["roll", "dice", "rng"]
+	COMMAND = "random"
+	ALIAS = ["roll", "dice", "rng"]
 
-	syntax = command + " [arguments] ..."
-	icon = "🎲"
+	SYNTAX = COMMAND + " [arguments] ..."
+	ICON = "🎲"
 
-	short = icon + " Rolls a completely random sets of numbers"
-	description = \
+	SHORT = ICON + " Rolls a completely random sets of numbers"
+	DESCRIPTION = \
 """
 A somewhat balanced number randomizer which can receive multiple and \
 complex parameters for customized rollings. Look below for details:
@@ -50,17 +51,24 @@ Application: `None`
 Caller: `None`
 """
 
+	MAX_ROLLS =                100_000_000
+	MAX_VALUE =  9_223_372_036_854_775_807
+	MIN_VALUE = -9_223_372_036_854_775_808
+
 	#==-----==#
 
-	def parseArgs(self, arg: str) -> tuple:
+	def parseArgs(self, arg: str) -> tuple[int, int, int]:
 		""" Parses argument and returns a tuple (rolls, min, max) """
-		rolls = 1
-		min = 1
-		max = 6
-		cur = arg.split("d")
+		rolls: int | str = 1
+		min: int | str = 1
+		max: int | str = 6
+		cur: list[str] = arg.split("d")
+
+		arg = arg.replace("_", "")
 		if not str.startswith(arg, "d"):
 			rolls = cur[0]
-		if cur[1]:
+
+		if len(cur) > 1 and cur[1]:
 			if cur[1].find("..") != -1:
 				if cur[1].find(",") != -1 or cur[1].find("..", cur[1].find("..") + int(1)) != -1:
 					return (-1, 0, 0)
@@ -75,76 +83,89 @@ Caller: `None`
 						min = 0
 			else:
 				max = cur[1]
+
 		logging.debug(f"ROLLS: {rolls} =-= MIN: {min} =-= MAX: {max}")
-		try: # Quick testing output
-			int(rolls)
-			int(min)
-			int(max)
-		except: # Invalid arguments are mostly due to invalid given arguments
+
+		try:
+			if int(max) < int(min):
+				tmp = max
+				max = min
+				min = tmp
+			ret: tuple[int, int, int] = (int(rolls), int(min), int(max))
+		except:
+			logging.debug("Invalid Arguments...")
 			return (-1, 0, 0)
-		if int(max) < int(min):
-			tmp = max
-			max = min
-			min = tmp
-		return (rolls, min, max)
+
+		if ret[2] > Random.MAX_VALUE or ret[1] < Random.MIN_VALUE:
+			logging.debug("Beyong MIN and MAX limits!")
+			return (-1, 0, 0)
+		return ret
 
 	#==-----==#
 
-	def newRoll(self, args: tuple) -> list:
+	def newRoll(self, args: tuple[int, int, int]) -> np.ndarray:
 		""" Roll with given tuple (rolls, min, max) and returns a list of values """
-		results = list()
-		for i in range(0, int(args[0])):
-			results.append(rng.randint(int(args[1]), int(args[2])))
-		return results
+		return np.random.randint(args[1], args[2] + 1, args[0])
 
 	#==-----==#
 
-	def displayRoll(self, values: list) -> str:
+	def displayRoll(self, values: np.ndarray) -> str:
 		""" Converts a list of values into a displayable string """
+
 		display = str("")
-		if len(values) > 1:
-			display += "Values: "
-		else:
-			display += "Value: "
-		first = bool(True)
-		total = int(0)
-		for i in values:
-			if first:
-				display += str(i)
-				first = False
+		if values.size <= 50:
+
+			if values.size > 1:
+				display += "Values: "
 			else:
-				display += ", " + str(i)
-			total += i
-		if len(display) > 200:
+				display += "Value: "
+
+			first = bool(True)
+			for i in values:
+				if first:
+					display += str(i)
+					first = False
+				else:
+					display += ", " + str(i)
+				if len(display) > 200:
+					display = "Too many values to display!"
+					break
+		else:
 			display = "Too many values to display!"
-		if len(values) > 1:
-			display += "\nTotal: " + str(total)
-			display += "\nAverage: " + str(math.floor((total / len(values)) * 100) / 100)
+
+		if values.size > 1:
+			display += "\nTotal:   " + str(np.sum(values))
+			display += "\nAverage: " + str(np.average(values))
 		return display
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
-			@discord.app_commands.describe(arguments = f"List of random sets (/help {self.command} for details)")
+			@cmd.command(name = i, description = self.SHORT)
+			@discord.app_commands.describe(arguments = f"List of random sets (/help {self.COMMAND} for details)")
 			async def run(ctx: discord.Interaction, arguments: str = None):
 
-				args = []
+				await ctx.response.defer(ephemeral = True, thinking = True)
+
+				total_rolls: int = 0
+				args: list[str] = []
 				if arguments:
 					args = arguments.split(" ")
-				res = list()
+				res: list[tuple[int, int, int]] = [(-1, 0, 0)] * len(args)
 				if len(args) > 0:
-					for i in args:
-						cur = self.parseArgs(i)
-						if (int(cur[0]) < 0):
-							await ctx.response.send_message(f"I cant understand your request..\nPlease look up the syntax with `/help {self.command}`!", ephemeral = True)
-							return
-						res.append(cur)
+					for i, v in enumerate(args):
+						res[i] = self.parseArgs(v)
+						if res[i][0] < 0:
+							return await ctx.followup.send(f"I cant understand your request..\nPlease look up the syntax with `/help {self.COMMAND}`!")
+						total_rolls += res[i][0]
+
+				if total_rolls > Random.MAX_ROLLS:
+					return await ctx.followup.send(f"Sorry but I'd rather limit this to {Random.MAX_ROLLS} rolls!\nWhy the heck you want that many anyway?\nTotal rolls given: {total_rolls}..")
 
 				embed = discord.embeds.Embed()
 				embed.color = 0xEB9234
@@ -153,11 +174,11 @@ Caller: `None`
 				embed.set_thumbnail(url="attachment://dices.png")
 
 				if len(args) > 0:
-					for i, y in enumerate(res):
+					for i, v in enumerate(res):
 						embed.add_field(
 							name = args[i],
-							value = self.displayRoll(self.newRoll(y)),
+							value = self.displayRoll(self.newRoll(v)),
 							inline = True )
 				else:
 					embed.description = self.displayRoll(self.newRoll((1, 1, 6)))
-				await ctx.response.send_message("I've noted down your results below:", file = file, embed = embed)
+				await ctx.followup.send("I've noted down your results below:", file = file, embed = embed)

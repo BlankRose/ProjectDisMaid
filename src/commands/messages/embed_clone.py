@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Mar  7 17:15:51 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,14 +14,14 @@ from src.utils import construct, predicates
 
 class Embed_Clone():
 
-	command = "embed_clone"
-	alias = ["embed_duplicate", "embed_dup"]
+	COMMAND = "embed_clone"
+	ALIAS = ["embed_duplicate", "embed_dup"]
 
-	syntax = command + " <Message ID> [Origin Channel] [Target Channel]"
-	icon = "📟"
+	SYNTAX = COMMAND + " <Message ID> [Origin Channel] [Target Channel]"
+	ICON = "📟"
 
-	short = icon + " Duplicates an already existing embed"
-	description = \
+	SHORT = ICON + " Duplicates an already existing embed"
+	DESCRIPTION = \
 """
 Duplicates an already existing embed into another in the same channel \
 or in another channel. This tool can be used as a way in case you prepared \
@@ -44,12 +44,12 @@ Caller: `Manage Messages`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			@discord.app_commands.describe(
 				message_id = "Message which contains the embed",
 				origin_channel = "Channel where is located the embed",

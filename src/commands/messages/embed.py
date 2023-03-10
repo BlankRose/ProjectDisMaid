@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:12:49 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,14 +14,14 @@ from src.utils import construct, predicates
 
 class Embed():
 
-	command = "embed"
-	alias = []
+	COMMAND = "embed"
+	ALIAS = []
 
-	syntax = command + " [Channel] [Title] [Description] [Color]"
-	icon = "📟"
+	SYNTAX = COMMAND + " [Channel] [Title] [Description] [Color]"
+	ICON = "📟"
 
-	short = icon + " Creates a freshly new embed"
-	description = \
+	SHORT = ICON + " Creates a freshly new embed"
+	DESCRIPTION = \
 """
 Creates a freshly new basic embed anywhere with whichever content \
 you wish, which can be further edited later using the command \
@@ -58,12 +58,12 @@ Caller: `Manage Messages`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			@discord.app_commands.describe(
 				title = "Title of the embed",
 				description = "Description of the embed",

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 15:58:41 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -14,14 +14,14 @@ from src.utils import construct, predicates
 
 class Embed_Edit():
 
-	command = "embed_edit"
-	alias = []
+	COMMAND = "embed_edit"
+	ALIAS = []
 
-	syntax = command + " <Message ID> <Sub Command> [Channel] ..."
-	icon = "📟"
+	SYNTAX = COMMAND + " <Message ID> <Sub Command> [Channel] ..."
+	ICON = "📟"
 
-	short = icon + " Edits an already existing embed"
-	description = \
+	SHORT = ICON + " Edits an already existing embed"
+	DESCRIPTION = \
 """
 Edits an already existing embed (can be created with the command \
 `embed`) and grants even more controls and flexibility over its \
@@ -128,12 +128,12 @@ Caller: `Manage Messages`
 				for entry in sub_cmds if current.lower() in entry.lower()
 			]
 
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			@discord.app_commands.describe(
 				channel = "Channel where is located the embed",
 				message_id = "Message which contains the embed",

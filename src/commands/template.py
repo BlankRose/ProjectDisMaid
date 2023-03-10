@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 17:09:51 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -13,14 +13,14 @@ import discord
 
 class T():
 
-	command = ""
-	alias = []
+	COMMAND = ""
+	ALIAS = []
 
-	syntax = command
-	icon = ""
+	SYNTAX = COMMAND
+	ICON = ""
 
-	short = icon + " "
-	description = \
+	SHORT = ICON + " "
+	DESCRIPTION = \
 """
 ... Here goes description ...
 
@@ -35,11 +35,11 @@ Caller: `None`
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
-		registry = self.alias + [self.command]
+		registry = self.ALIAS + [self.COMMAND]
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.short)
+			@cmd.command(name = i, description = self.SHORT)
 			async def run(ctx: discord.Interaction):
 				await ctx.response.send_message("How did we get here..?", ephemeral = True)

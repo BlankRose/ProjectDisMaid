@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu Mar  9 19:05:43 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 20:54:17 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,6 +15,6 @@ class Admin():
 	__all__ = ["mute", "unmute", "debug"]
 	entries = import_entries(__all__, "src.commands.admin")
 
-	icon = "🛠"
-	title = "Server Administration"
-	description = "Commands which handles all kind of moderations and systems"
+	ICON = "🛠"
+	TITLE = "Server Administration"
+	DESCRIPTION = "Commands which handles all kind of moderations and systems"
