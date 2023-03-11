@@ -5,16 +5,16 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:56:59 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 20:47:12 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.utils.construct import import_entries
-class Scripts:
+class Data:
 
-	__all__ = ["hello", "random"]
-	entries = import_entries(__all__, "src.commands.scripts")
+	__all__ = ["level"]
+	entries = import_entries(__all__, "src.commands.data")
 
-	ICON = "🎲"
-	TITLE = "Utilities & Entertainment"
-	DESCRIPTION = "Commands mostly here to diversify a bit the server"
+	ICON = "🔖"
+	TITLE = "Roles & Levels"
+	DESCRIPTION = "Commands about any kind of enrolling (Comming Soon..)"

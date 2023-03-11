@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:52:23 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:52:34 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,7 +15,7 @@ import random as rng
 import numpy as np
 import math
 
-class Random():
+class Random:
 
 	COMMAND = "random"
 	ALIAS = ["roll", "dice", "rng"]

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 15:02:43 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 21:29:40 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -13,7 +13,7 @@ from pathlib import Path
 import logging
 import os
 
-class Logs():
+class Logs:
 
 	"""
 	Logging class for easier handling with the `logging` module
@@ -27,8 +27,6 @@ class Logs():
 
 	Methods
 	-------
-	_init_(folder: `str`, file: `str`) -> `None`
-		Initializes the logging class
 	clean(keep: `int`) -> `None`
 		Cleans older files, defined by the configuration
 	danger(msg: `str`) -> `None`

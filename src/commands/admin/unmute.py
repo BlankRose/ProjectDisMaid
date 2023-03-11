@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.utils import predicates
 import discord
 
-class Unmute():
+class Unmute:
 
 	COMMAND = "unmute"
 	ALIAS = ["demute"]

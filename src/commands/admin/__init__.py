@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:54:17 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 20:50:32 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -17,4 +17,4 @@ class Admin():
 
 	ICON = "🛠"
 	TITLE = "Server Administration"
-	DESCRIPTION = "Commands which handles all kind of moderations and systems"
+	DESCRIPTION = "Commands which handles moderations and systems"

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:06:21 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 20:22:51 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -13,7 +13,7 @@ from src.commands import *
 import logging as logs
 import discord
 
-class Help():
+class Help:
 
 	COMMAND = "help"
 	ALIAS = ["commands", "guidelines", "cmds"]
@@ -105,11 +105,13 @@ Caller: `None`
 			@discord.app_commands.autocomplete(command = autocomplete)
 			async def run(ctx: discord.Interaction, command: str = None):
 
+				# Base Embed Structure
 				embed = discord.embeds.Embed()
 				embed.color = 0xb842ae
 				embed.title = "**Maids' Guidelines**"
 				embed.set_footer(text = "Edited by Rosie#4721 - 2022", icon_url = "https://i.imgur.com/w1BwX4h.png")
 
+				# Default Behavior
 				if not command:
 
 					for i in entries:
@@ -132,6 +134,7 @@ Caller: `None`
 					embed.set_thumbnail(url="attachment://logo.png")
 					await ctx.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True, view = Help.Selector(ctx, embed))
 
+				# Search and Display Command
 				else:
 
 					if command in entries:

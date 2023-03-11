@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:18 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -13,7 +13,7 @@ from src.utils import predicates, construct
 import time as t
 import discord
 
-class Mute():
+class Mute:
 
 	COMMAND = "mute"
 	ALIAS = ["silence", "timeout"]

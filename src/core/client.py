@@ -5,31 +5,32 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 22:16:17 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core import logs, configs
-from src import commands
+from src import commands, events
 from pathlib import Path
 import sys
 
 import discord.app_commands as app
 import logging as log
-import traceback
 import discord
 
 class Client(discord.Client):
+
 	"""
-	Client class to handles discord.py API works
-	
-	Attributes:
-	- `cmds`: CommandTree
+	Client class to handles discord.py API workflow
+
+	Attributes
+	----------
+	cmds: `CommandTree`
+		Command tree of the running instance
 	"""
 
 	#==-----==#
 
-	cmds = None
 	DESCRIPTION = \
 """
 Just a silly maid mouse for all of your needs~
@@ -44,14 +45,16 @@ Source (Github):  [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid
 
 	#==-----==#
 
-	def __init__(self, intents: discord.Intents = discord.Intents.default()):
-		"""
-		Initialize a new Client
-
-		- `INTENTS` = Permission intents for the client
-		"""
+	def __init__(self):
+		intents = discord.Intents.default()
 		intents.members = True
-		super().__init__(intents=intents)
+		intents.message_content = True
+
+		super().__init__(
+			intents=intents,
+			activity=discord.Activity(name = "/help for commands", type = discord.ActivityType.watching))
+
+		self.cmds: app.CommandTree = None
 		self.synced = False
 
 	#==-----==#
@@ -115,16 +118,12 @@ def run(token: str) -> None:
 	for i in entries:
 		entries[i]().register(cmds, entries)
 
-	@cmds.error
-	async def cmd_error(ctx: discord.Interaction, error: app.AppCommandError):
-		if isinstance(error, app.CommandOnCooldown):
-			await ctx.response.send_message(f"Please, lemme relax a bit between tasks..\nI'll be avaible again for that in {error.retry_after}!")
-		else:
-			print("\033[1;31;2mWARNING: \033[0;1;31mAn error occured!\n\n", traceback.format_exc())
-			log.error(traceback.format_exc())
+	entries = events.entries
+	for i in events.entries:
+		entries[i].register(cmd = cmds, bot = bot)
 
-	Client.cmds = cmds
 	try:
+		bot.cmds = cmds
 		bot.run(token)
-	except:
-		log.error("The bot couldnt be started! Internet issues or Invalid Token?")
+	except Exception as err:
+		log.error(f"The bot couldnt be started! Internet issues or Invalid Token?\nError: {err}")

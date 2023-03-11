@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Mar  6 18:23:01 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 21:29:45 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import json
 import logging
 
-class Config():
+class Config:
 
 	"""
 	Config class to handle configurations files (stored in `.json` files)

@@ -1,20 +1,27 @@
 # ********************************************************************* #
 #          .-.                                                          #
 #    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   DisMaid - __init__.py                           #
+#   (  `'.\   /.'`  )   DisMaid - template.py                           #
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:56:59 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 22:48:17 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.utils.construct import import_entries
-class Scripts:
+import discord
 
-	__all__ = ["hello", "random"]
-	entries = import_entries(__all__, "src.commands.scripts")
+class T:
 
-	ICON = "🎲"
-	TITLE = "Utilities & Entertainment"
-	DESCRIPTION = "Commands mostly here to diversify a bit the server"
+	"""
+	Trigger template model
+	"""
+
+	#==-----==#
+
+	@staticmethod
+	def register(*, bot: discord.Client, **_: None):
+
+		@bot.event
+		async def event():
+			pass

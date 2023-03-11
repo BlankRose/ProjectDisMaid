@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Fri Mar 10 21:04:13 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
 from src.utils import construct, predicates
 
-class Embed_Edit():
+class Embed_Edit:
 
 	COMMAND = "embed_edit"
 	ALIAS = []

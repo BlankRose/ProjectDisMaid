@@ -1,34 +1,35 @@
 # ********************************************************************* #
 #          .-.                                                          #
 #    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   DisMaid - hello.py                              #
+#   (  `'.\   /.'`  )   DisMaid - level.py                              #
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 21:38:42 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
-import random as rng
-from src.utils import construct
 
-class Hello:
+class Level:
 
-	COMMAND = "hello"
-	ALIAS = ["hai"]
+	COMMAND = "level"
+	ALIAS = ["lvl", "rank", "stats"]
 
-	SYNTAX = COMMAND
-	ICON = "💬"
+	SYNTAX = COMMAND + " [User]"
+	ICON = "⬆️"
 
-	SHORT = ICON + " Giving a warm welcome to the maid is always appreciable"
+	SHORT = ICON + " Displays leveling statistics"
 	DESCRIPTION = \
 """
-Giving out a warm welcome to the hard working maid is always \
-appreciated and means a lot to them!~ xoxo~
+Displays some detailed stats about the target's levels, \
+if the leveling system is enabled within the server.
 
 __ARGUMENTS:__
-`None` - *Doesn't contains any arguments*
+`User` - *Targetted User to show stats off*
+
+__UNSPECIFIED VALUES:__
+`User` - *It will target the caller by default*
 
 __REQUIERED PERMISSIONS:__
 Application: `None`
@@ -44,14 +45,5 @@ Caller: `None`
 	#==-----==#
 
 			@cmd.command(name = i, description = self.SHORT)
-			async def run(ctx: discord.Interaction):
-				caseA = ["Hai sweetheart~",
-						"Hello there~",
-						"Hoi!"]
-				strA = caseA[rng.randrange(0, len(caseA))]
-				caseB = ["(^owo^)s *Meow.*",
-						"How are you?",
-						"Would you like some cookies?",
-						"Have you seen my cat? I can't find it anywhere."]
-				strB = caseB[rng.randrange(0, len(caseB))]
-				await construct.reply(ctx, f"{strA}\n{strB}")
+			async def run(ctx: discord.Interaction, user: discord.User = None):
+				await ctx.response.send_message("How did we get here..?", ephemeral = True)

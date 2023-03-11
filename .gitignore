@@ -1,5 +1,5 @@
 # SECURITY PURPOSE
-data
+/data
 logs
 
 # NON TRIVIAL FOLDERS

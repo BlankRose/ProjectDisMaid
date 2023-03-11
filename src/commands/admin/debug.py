@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:53:22 CET 2023      #
+#       //\   /         Last Updated: Sat Mar 11 22:10:15 CET 2023      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import discord
 from src.utils import construct
 
-class Debug():
+class Debug:
 
 	COMMAND = "debug"
 	ALIAS = []
@@ -64,3 +64,4 @@ Caller: `None`
 				if ctx.user.id != 353435819924652043:
 					return await construct.reply(ctx, "I may only allow my Owner to ask me to do this dangerous task!")
 				await ctx.response.send_message("Selector debug:", view = Debug.Selector(ctx), ephemeral = True)
+				await ctx.response.send_message("Should throws error...", ephemeral = True)
