@@ -5,92 +5,20 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:04:13 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:39:54 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-import discord
+from src.core.locals import get_local
 from src.utils import construct, predicates
+import discord
 
 class Embed_Edit:
 
+	LOC_BASE = "command.messages.embed_edit"
 	COMMAND = "embed_edit"
 	ALIAS = []
-
-	SYNTAX = COMMAND + " <Message ID> <Sub Command> [Channel] ..."
 	ICON = "📟"
-
-	SHORT = ICON + " Edits an already existing embed"
-	DESCRIPTION = \
-"""
-Edits an already existing embed (can be created with the command \
-`embed`) and grants even more controls and flexibility over its \
-design with its various sub-commands.
-
-__ARGUMENTS:__
-`Message ID` - *Message which contains the embed to edit*
-`Channel` - *Channel where is located the embed to edit*
-`Sub Commands` - *Commands to executes, which can be:*
-
-`add_field` - *Adds a normal field, at given index*
-ARGS: <Title AND/OR Description> [Inline] [Index]
-`add_footer` - *Adds a footer field (replaces)*
-ARGS: <Description> [Image URL]
-`add_author` - *Adds an author field (replaces)*
-ARGS: <Description> [Image URL]
-`set_body` - *Changes the content of the main field*
-ARGS: <Title AND/OR Description>
-`set_field` - *Changes the content of any fields*
-ARGS: <Title AND/OR Description> [Inline] [Index]
-`set_thumbnail` - *Changes the thumbnail*
-ARGS: [Image URL]
-`set_title` - *Changes the title of the body OR of a field when index is given*
-ARGS: <Title> [Index]
-`set_description` - *Changes the description of the body OR of a field when index is given*
-ARGS: <Description> [Index]
-`set_color` - *Changes the color*
-ARGS: <Hex Color (in Title OR in Description)>
-`del_field` - *Deletes a field, at given index*
-ARGS: <Index>
-`del_title` - *Removes the title of the body OR of a field when index is given*
-ARGS: [Index]
-`del_description` - *Removes the description of the body OR of a field when index is given*
-ARGS: [Index]
-`del_footer` - *Removes the footer field*
-`del_author` - *Removes the author field*
-`del_all_fields` - *Deletes every single fields*
-`get_color` - *Fetch the color*
-
-__SUB ARGUMENTS:__
-`Title` - *Text of the field's header*
-`Description` - *Content of the field's body*
-`Image URL` - *URL to the image to display OR removes it in thumbnail context*
-`Inline` - *Wether fields should be aligned on same line or not*
-`Index` - *Position of the field (from 1 to Number of Fields)*
-
-__UNSPECIFIED VALUES:__
-`Channel` - *Will search the embed in the current channel*
-`Title` `Description` - *Won't add anything new to the embed BUT one must be specified!*
-`Image URL` *Won't display any images*
-`Inline` - *Will be defined as False*
-`Index` - *Will be considered the very last index*
-
-__SIDE NOTES:__
-Due to discord's limitations, embeds has their set limits as such:
- - `Titles` are limited to **256** characters
- - `Descriptions` are limited to **4096** characters
- - `Embeds` can only contains up to **25** fields
- - `Fields titles` are limited to **256** characters
- - `Fields descriptions` are limited to **1024** characters
- - `Footers` are limited to **2048** characters
- - `Author name` is limited to **256** characters
- - Finally, the total amount of characters cannot exceed **6000**
-Extra arguments not used by the sub commands will be ignored.
-
-__REQUIERED PERMISSIONS:__
-Application: `Send Messages`
-Caller: `Manage Messages`
-"""
 
 	#==-----==#
 
@@ -129,11 +57,12 @@ Caller: `Manage Messages`
 			]
 
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(
 				channel = "Channel where is located the embed",
 				message_id = "Message which contains the embed",

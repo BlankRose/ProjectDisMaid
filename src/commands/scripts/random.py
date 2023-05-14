@@ -5,51 +5,21 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:52:34 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:38:21 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from src.core.locals import get_local
+import numpy as np
 import logging
 import discord
-import random as rng
-import numpy as np
-import math
 
 class Random:
 
+	LOC_BASE = "command.scripts.random"
 	COMMAND = "random"
 	ALIAS = ["roll", "dice", "rng"]
-
-	SYNTAX = COMMAND + " [arguments] ..."
 	ICON = "🎲"
-
-	SHORT = ICON + " Rolls a completely random sets of numbers"
-	DESCRIPTION = \
-"""
-A somewhat balanced number randomizer which can receive multiple and \
-complex parameters for customized rollings. Look below for details:
-
-__ARGUMENTS:__
-`None` - *Generates one random number between 1 and 6*
-`X` - *Generates `X` random numbers between 1 and 6*
-`XdY` - *Generates `X` random numbers between 1 and `Y`*
-`XdY..Z` - *Generates `X` random numbers between `Y` and `Z`*
-`XdPATTERN` - *Generates `X` random numbers following given `PATTERN`*
-
-__UNSPECIFIED VALUES:__
-`X` - *Will becomes 1*
-`Y` - *Will becomes 6 in XdY case or 0 in XdY..Z case*
-`Z` - *Will becomes 0*
-
-__SIDE NOTES:__
-There can be multiple arguments, each seperated with spaces
-`PATTERN` uses values seperated with commas, like here: `3,8,9,6,2`
-`X` cannot be a negative value
-
-__REQUIERED PERMISSIONS:__
-Application: `None`
-Caller: `None`
-"""
 
 	MAX_ROLLS =                100_000_000
 	MAX_VALUE =  9_223_372_036_854_775_807
@@ -142,11 +112,12 @@ Caller: `None`
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(arguments = f"List of random sets (/help {self.COMMAND} for details)")
 			async def run(ctx: discord.Interaction, arguments: str = None):
 

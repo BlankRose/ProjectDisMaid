@@ -5,51 +5,31 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:12:53 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-import discord
+from src.core.locals import get_local
 from src.utils import construct, predicates
+import discord
 
 class Embed_Clone:
 
+	LOC_BASE = "command.messages.embed_clone"
 	COMMAND = "embed_clone"
 	ALIAS = ["embed_duplicate", "embed_dup"]
-
-	SYNTAX = COMMAND + " <Message ID> [Origin Channel] [Target Channel]"
 	ICON = "📟"
-
-	SHORT = ICON + " Duplicates an already existing embed"
-	DESCRIPTION = \
-"""
-Duplicates an already existing embed into another in the same channel \
-or in another channel. This tool can be used as a way in case you prepared \
-the embed in a test channel and wants to exports it in a public channel or \
-if you wanna modify it without changing the original.
-
-__ARGUMENTS:__
-`Message ID` - *Message which contains the embed to duplicate*
-`Origin Channel` - *Channel where is located the embed to duplicate*
-`Target Channel` - *Channel where to post the new embed*
-
-__UNSPECIFIED VALUES:__
-`Channel` - *Will search / post the embed in the current channel*
-
-__REQUIERED PERMISSIONS:__
-Application: `Send Messages`
-Caller: `Manage Messages`
-"""
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(
 				message_id = "Message which contains the embed",
 				origin_channel = "Channel where is located the embed",

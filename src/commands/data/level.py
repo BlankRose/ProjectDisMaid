@@ -5,45 +5,29 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 21:38:42 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:41:00 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from src.core.locals import get_local
 import discord
 
 class Level:
 
+	LOC_BASE = "command.data.level"
 	COMMAND = "level"
 	ALIAS = ["lvl", "rank", "stats"]
-
-	SYNTAX = COMMAND + " [User]"
 	ICON = "⬆️"
-
-	SHORT = ICON + " Displays leveling statistics"
-	DESCRIPTION = \
-"""
-Displays some detailed stats about the target's levels, \
-if the leveling system is enabled within the server.
-
-__ARGUMENTS:__
-`User` - *Targetted User to show stats off*
-
-__UNSPECIFIED VALUES:__
-`User` - *It will target the caller by default*
-
-__REQUIERED PERMISSIONS:__
-Application: `None`
-Caller: `None`
-"""
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			async def run(ctx: discord.Interaction, user: discord.User = None):
 				await ctx.response.send_message("How did we get here..?", ephemeral = True)

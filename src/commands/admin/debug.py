@@ -5,35 +5,20 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 22:10:15 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:41:32 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-import discord
+from src.core.locals import get_local
 from src.utils import construct
+import discord
 
 class Debug:
 
+	LOC_BASE = "command.admin.debug"
 	COMMAND = "debug"
 	ALIAS = []
-
-	SYNTAX = COMMAND
 	ICON = "⚠️"
-
-	SHORT = ICON + " Testing purpose command"
-	DESCRIPTION = \
-"""
-Testing purpose command..
-This is usually unstable and may not responds \
-due to internal errors (but atleast it is protected)
-
-__ARGUMENTS:__
-`None` - *Doesn't contains any arguments*
-
-__REQUIERED PERMISSIONS:__
-Application: `None`
-Caller: `None`
-"""
 
 	#==-----==#
 
@@ -54,11 +39,12 @@ Caller: `None`
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			async def run(ctx: discord.Interaction):
 
 				if ctx.user.id != 353435819924652043:

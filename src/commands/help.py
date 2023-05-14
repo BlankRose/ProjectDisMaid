@@ -5,38 +5,22 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 20:22:51 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 19:20:08 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from src.core.locals import get_local
+from src.utils import construct
 from src.commands import *
 import logging as logs
 import discord
 
 class Help:
 
+	LOC_BASE = "command.general.help"
 	COMMAND = "help"
 	ALIAS = ["commands", "guidelines", "cmds"]
-
-	SYNTAX = COMMAND + " [Command]"
 	ICON = "📕"
-
-	SHORT = ICON + " The maid's guidelines"
-	DESCRIPTION = \
-"""
-This command will open the maid's guidelines, where is located the \
-`command` when specified or gives a summary if nothing is given.
-
-__ARGUMENTS:__
-`Command` - *Search for a specefic command*
-
-__UNSPECIFIED VALUES:__
-`Command` - *It will instead opens a summary of avaible commands*
-
-__REQUIERED PERMISSIONS:__
-Application: `None`
-Caller: `None`
-"""
 
 	#==-----==#
 
@@ -65,9 +49,12 @@ Caller: `None`
 
 			for i in target:
 				entry = target[i]()
+				syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
+				short = get_local("en-us", f"{entry.LOC_BASE}.short")
+
 				self.embed.add_field(
-					name = f"/{entry.SYNTAX}",
-					value = entry.SHORT,
+					name = f"/{entry.COMMAND} {syntax}",
+					value = f"{entry.ICON} {short}",
 					inline = False )
 
 			await self.origin.edit_original_response(content = f"Here's the commands for the {select.values[0]} category:", embed = self.embed)
@@ -96,11 +83,12 @@ Caller: `None`
 			]
 
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(command = "The command to check")
 			@discord.app_commands.autocomplete(command = autocomplete)
 			async def run(ctx: discord.Interaction, command: str = None):
@@ -117,9 +105,12 @@ Caller: `None`
 					for i in entries:
 						if i in non_categorized:
 							entry = entries[i]()
+							syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
+							short = get_local("en-us", f"{entry.LOC_BASE}.short")
+
 							embed.add_field(
-								name = f"/{entry.SYNTAX}",
-								value = entry.SHORT,
+								name = f"/{entry.COMMAND} {syntax}",
+								value = f"{entry.ICON} {short}",
 								inline = False )
 
 					embed.add_field(
@@ -139,13 +130,16 @@ Caller: `None`
 
 					if command in entries:
 						entry: Any = entries[command]()
-						embed.description = f"{entry.ICON} __**/{entry.SYNTAX}:**__"
+						syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
+						description = construct.full_description("en-us", entry.LOC_BASE)
+
+						embed.description = f"{entry.ICON} __**/{entry.COMMAND} {syntax}:**__"
 						if entry.ALIAS and len(entry.ALIAS) > 0:
 							embed.description += "\n__Aliases:__"
 							for i in entry.ALIAS:
 								embed.description += f" `{i}`"
-						if entry.DESCRIPTION and len(entry.DESCRIPTION) > 0:
-							embed.description += f"\n{entry.DESCRIPTION}"
+						if description and len(description) > 0:
+							embed.description += f"\n{description}"
 						await ctx.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
 					else:
 						await ctx.response.send_message("Sorry, I didn't found any entry in the guidelines.", ephemeral = True)

@@ -5,11 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 14:56:09 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 18:45:28 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from typing import Any
+from src.core.locals import get_local
 import datetime
 import discord
 
@@ -18,6 +19,8 @@ def max_time() -> datetime.datetime:
 	Returns the max datatime supported by Python (Year 10000 - 1 us)
 	"""
 	return datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)
+
+	#==-----==#
 
 def parse_time(time: str) -> datetime.datetime | None:
 	"""
@@ -65,6 +68,8 @@ def parse_time(time: str) -> datetime.datetime | None:
 				tmp = ""
 	return result
 
+	#==-----==#
+
 def parse_hexa(data: str) -> int | None:
 	value = 0
 	for i in data:
@@ -79,9 +84,13 @@ def parse_hexa(data: str) -> int | None:
 			return
 	return value
 
+	#==-----==#
+
 async def reply(ctx: discord.Interaction, msg: str = None, ephemeral: bool = True) -> None:
 	if not msg: await ctx.response.send_message("Task completed!", ephemeral = ephemeral, delete_after = 10)
 	else: await ctx.response.send_message(msg, ephemeral = ephemeral)
+
+	#==-----==#
 
 def import_entries(imports: dict[str, str | list[str]] | list[str], dir: str = "") -> dict[str, Any]:
 	"""
@@ -89,7 +98,7 @@ def import_entries(imports: dict[str, str | list[str]] | list[str], dir: str = "
 
 	When using a list, it will try to find the name of the element to import with
 	the same, in title, as of the module
-	
+
 	When using a dict instead of a list, the key will be the name of the module
 	and the value will be the name of the element to import (a list can be given
 	to import multiple elements at once from a singular module)
@@ -125,3 +134,21 @@ def import_entries(imports: dict[str, str | list[str]] | list[str], dir: str = "
 	else:
 		print(f"import_entries() only accepts list or dictionaries as arguments! Provided: {imports.__class__.__name__}")
 	return entries
+
+	#==-----==#
+
+def full_description(lang: str, loc_base: str) -> str:
+
+	output: str = ""
+	cmd_base: str = "command.base"
+	order: list[str] = ["description", "arguments", "sub_arguments", "unspecified", "notes", "permissions"]
+
+	for i in order:
+		local = f"{loc_base}.{i}"
+		tmp = get_local(lang, local)
+
+		if not tmp == local:
+			if not i == order[0]:
+				output += "\n\n" + get_local(lang, f"{cmd_base}.{i}") + '\n'
+			output += tmp
+	return output

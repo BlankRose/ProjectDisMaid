@@ -1,6 +1,6 @@
 # SECURITY PURPOSE
 /data
-logs
+/logs
 
 # NON TRIVIAL FOLDERS
 __pycache__
@@ -10,3 +10,4 @@ env
 # USELESS FILES
 .DS_Store
 .vscode
+.header

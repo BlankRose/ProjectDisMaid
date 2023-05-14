@@ -5,65 +5,31 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:39:40 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-import discord
+from src.core.locals import get_local
 from src.utils import construct, predicates
+import discord
 
 class Embed:
 
+	LOC_BASE = "command.messages.embed"
 	COMMAND = "embed"
 	ALIAS = []
-
-	SYNTAX = COMMAND + " [Channel] [Title] [Description] [Color]"
 	ICON = "📟"
-
-	SHORT = ICON + " Creates a freshly new embed"
-	DESCRIPTION = \
-"""
-Creates a freshly new basic embed anywhere with whichever content \
-you wish, which can be further edited later using the command \
-`embed_edit`, which gives even more controls over the design.
-
-__ARGUMENTS:__
-`Channel` - *Channel where to post the new embed*
-`Title` - *Text of the embed's header*
-`Description` - *Content of the embed's body*
-`Color` - *The color of the embed's sidebar, defined in Hexadecimal*
-
-__UNSPECIFIED VALUES:__
-`Channel` - *Will post the embed in the current channel*
-`Title` - *Wont print anything but MUST be set if Description isn't*
-`Description` - *Wont print anything but MUST be set if Title isn't*
-`Color` - *Will give the default color*
-
-__SIDE NOTES:__
-Due to discord's limitations, embeds has their set limits as such:
- - `Titles` are limited to **256** characters
- - `Descriptions` are limited to **4096** characters
- - `Embeds` can only contains up to **25** fields
- - `Fields titles` are limited to **256** characters
- - `Fields descriptions` are limited to **1024** characters
- - `Footers` are limited to **2048** characters
- - `Author name` is limited to **256** characters
- - Finally, the total amount of characters cannot exceed **6000**
-
-__REQUIERED PERMISSIONS:__
-Application: `Send Messages`
-Caller: `Manage Messages`
-"""
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(
 				title = "Title of the embed",
 				description = "Description of the embed",

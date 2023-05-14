@@ -1,0 +1,290 @@
+{
+	"command":
+	{
+		"base":
+		{
+			"arguments": "__ARGUMENTS:__",
+			"sub_arguments": "__SUB ARGUMENTS:__",
+			"unspecified": "__UNSPECIFIED VALUES:__",
+			"notes": "__SIDE NOTES:__",
+			"permissions": "__REQUIERED PERMISSIONS:__"
+		},
+
+		"admin":
+		{
+			"debug": {
+				"syntax": "",
+				"short": "Testing purpose command",
+				"description": "Testing purpose command..\nThis is usually unstable and may not responds due to internal errors (but atleast it is protected)",
+				"arguments": [
+					"`None` - *Doesn't contains any arguments*"
+				],
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			},
+			"mute": {
+				"syntax": "<User> [Time] [Reason] [DM]",
+				"short": "Silence anyone who is being nasty",
+				"description": "A basic command to mute someone with some extra parameters to work around. We hope muting can calm those nasty poeple..",
+				"arguments": [
+					"`User` - *User to target (dont try on me plz)*",
+					"`Time` - *How long they shall be muted*",
+					"`Reason` - *Why do you want to mute them*",
+					"`DM` - *Wether or not we shall notify the user in their DMs*"
+				],
+				"unspecified": [
+					"`Time` - *Will be treated as* `inf`",
+					"`DM` - *Will be treated as* `True`"
+				],
+				"notes": [
+					"`Time` can be set as following `.y.d.h.m.s` (where dots are numbers)",
+					"`Time` can also be set to `inf` for long term mute",
+					"By default, this command will use discord's timeout feature but this",
+					"one is limited to 28 days by the API! This behavior can be switch to",
+					"role-based which allows much longer mute timespan (currently WIP)"
+				],
+				"permissions": [
+					"Application: `Moderate Members`",
+					"Caller: `Moderate Members`"
+				]
+			},
+			"unmute": {
+				"syntax": "<User> [DM]",
+				"short": "Lift off any silence punishments",
+				"description": "A basic command to unmute someone, giving them back the right to talk. Did the mute finally calmed them down?",
+				"arguments": [
+					"`User` - *User to target*",
+					"`DM` - *Wether or not we shall notify the user in their DMs*"
+				],
+				"unspecified": [
+					"`DM` - *Will be treated as* `True`"
+				],
+				"notes": [
+					"If you went for role-based mutes and have changed to a different",
+					"roles, members who has been muted before hand might be still",
+					"muted. So watch out for that in case you can't unmute them!"
+				],
+				"permissions": [
+					"Application: `Moderate Members`",
+					"Caller: `Moderate Members`"
+				]
+			}
+		},
+
+		"data":
+		{
+			"level": {
+				"syntax": "[User]",
+				"short": "Displays leveling statistics",
+				"description": "Displays some detailed stats about the target's levels, if the leveling system is enabled within the server.",
+				"arguments": [
+					"`User` - *Targetted User to show stats off*"
+				],
+				"unspecified": [
+					"`User` - *It will target the caller by default*"
+				],
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			}
+		},
+
+		"messages":
+		{
+			"embed": {
+				"syntax": "[Channel] [Title] [Description] [Color]",
+				"short": "Creates a freshly new embed",
+				"description": "Creates a freshly new basic embed anywhere with whichever content you wish, which can be further edited later using the command `embed_edit`, which gives even more controls over the design.",
+				"arguments": [
+					"`Channel` - *Channel where to post the new embed*",
+					"`Title` - *Text of the embed's header*",
+					"`Description` - *Content of the embed's body*",
+					"`Color` - *The color of the embed's sidebar, defined in Hexadecimal*"
+				],
+				"unspecified": [
+					"`Channel` - *Will post the embed in the current channel*",
+					"`Title` - *Wont print anything but MUST be set if Description isn't*",
+					"`Description` - *Wont print anything but MUST be set if Title isn't*",
+					"`Color` - *Will give the default color*"
+				],
+				"notes": [
+					"Due to discord's limitations, embeds has their set limits as such:",
+					" - `Titles` are limited to **256** characters",
+					" - `Descriptions` are limited to **4096** characters",
+					" - `Embeds` can only contains up to **25** fields",
+					" - `Fields titles` are limited to **256** characters",
+					" - `Fields descriptions` are limited to **1024** characters",
+					" - `Footers` are limited to **2048** characters",
+					" - `Author name` is limited to **256** characters",
+					" - Finally, the total amount of characters cannot exceed **6000**"
+				],
+				"permissions": [
+					"Application: `Send Messages`",
+					"Caller: `Manage Messages`"
+				]
+			},
+			"embed_edit": {
+				"syntax": "<Message ID> <Sub Command> [Channel] ...",
+				"short": "Edits an already existing embed",
+				"description": "Edits an already existing embed (can be created with the command `embed`) and grants even more controls and flexibility over its design with its various sub-commands.",
+				"arguments": [
+					"`Message ID` - *Message which contains the embed to edit*",
+					"`Channel` - *Channel where is located the embed to edit*",
+					"`Sub Commands` - *Commands to executes, which can be:*",
+					"",
+					"`add_field` - *Adds a normal field, at given index*",
+					"ARGS: <Title AND/OR Description> [Inline] [Index]",
+					"`add_footer` - *Adds a footer field (replaces)*",
+					"ARGS: <Description> [Image URL]",
+					"`add_author` - *Adds an author field (replaces)*",
+					"ARGS: <Description> [Image URL]",
+					"`set_body` - *Changes the content of the main field*",
+					"ARGS: <Title AND/OR Description>",
+					"`set_field` - *Changes the content of any fields*",
+					"ARGS: <Title AND/OR Description> [Inline] [Index]",
+					"`set_thumbnail` - *Changes the thumbnail*",
+					"ARGS: [Image URL]",
+					"`set_title` - *Changes the title of the body OR of a field when index is given*",
+					"ARGS: <Title> [Index]",
+					"`set_description` - *Changes the description of the body OR of a field when index is given*",
+					"ARGS: <Description> [Index]",
+					"`set_color` - *Changes the color*",
+					"ARGS: <Hex Color (in Title OR in Description)>",
+					"`del_field` - *Deletes a field, at given index*",
+					"ARGS: <Index>",
+					"`del_title` - *Removes the title of the body OR of a field when index is given*",
+					"ARGS: [Index]",
+					"`del_description` - *Removes the description of the body OR of a field when index is given*",
+					"ARGS: [Index]",
+					"`del_footer` - *Removes the footer field*",
+					"`del_author` - *Removes the author field*",
+					"`del_all_fields` - *Deletes every single fields*",
+					"`get_color` - *Fetch the color*"
+				],
+				"sub_arguments": [
+					"`Title` - *Text of the field's header*",
+					"`Description` - *Content of the field's body*",
+					"`Image URL` - *URL to the image to display OR removes it in thumbnail context*",
+					"`Inline` - *Wether fields should be aligned on same line or not*",
+					"`Index` - *Position of the field (from 1 to Number of Fields)*"
+				],
+				"unspecified": [
+					"`Channel` - *Will search the embed in the current channel*",
+					"`Title` `Description` - *Won't add anything new to the embed BUT one must be specified!*",
+					"`Image URL` *Won't display any images*",
+					"`Inline` - *Will be defined as False*",
+					"`Index` - *Will be considered the very last index*"
+				],
+				"notes": [
+					"Due to discord's limitations, embeds has their set limits as such:",
+					" - `Titles` are limited to **256** characters",
+					" - `Descriptions` are limited to **4096** characters",
+					" - `Embeds` can only contains up to **25** fields",
+					" - `Fields titles` are limited to **256** characters",
+					" - `Fields descriptions` are limited to **1024** characters",
+					" - `Footers` are limited to **2048** characters",
+					" - `Author name` is limited to **256** characters",
+					" - Finally, the total amount of characters cannot exceed **6000**",
+					"Extra arguments not used by the sub commands will be ignored."
+				],
+				"permissions": [
+					"Application: `Send Messages`",
+					"Caller: `Manage Messages`"
+				]
+			},
+			"embed_clone": {
+				"syntax": "<Message ID> [Origin Channel] [Target Channel]",
+				"short": "Duplicates an already existing embed",
+				"description": "Duplicates an already existing embed into another in the same channel or in another channel. This tool can be used as a way in case you prepared the embed in a test channel and wants to exports it in a public channel or if you wanna modify it without changing the original.",
+				"arguments": [
+					"`Message ID` - *Message which contains the embed to duplicate*",
+					"`Origin Channel` - *Channel where is located the embed to duplicate*",
+					"`Target Channel` - *Channel where to post the new embed*"
+				],
+				"unspecified": [
+					"`Channel` - *Will search / post the embed in the current channel*"
+				],
+				"permissions": [
+					"Application: `Send Messages`",
+					"Caller: `Manage Messages`"
+				]
+			}
+		},
+
+		"scripts":
+		{
+			"hello": {
+				"syntax": "",
+				"short": "Giving a warm welcome to the maid is always appreciable",
+				"description": "Giving out a warm welcome to the hard working maid is always appreciated and means a lot to them!~ xoxo~",
+				"arguments": [
+					"`None` - *Doesn't contains any arguments*"
+				],
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			},
+			"random": {
+				"syntax": "[Arguments] ...",
+				"short": "Rolls a completely random sets of numbers",
+				"description": "A somewhat balanced number randomizer which can receive multiple and complex parameters for customized rollings. Look below for details:",
+				"arguments": [
+					"`None` - *Generates one random number between 1 and 6*",
+					"`X` - *Generates `X` random numbers between 1 and 6*",
+					"`XdY` - *Generates `X` random numbers between 1 and `Y`*",
+					"`XdY..Z` - *Generates `X` random numbers between `Y` and `Z`*",
+					"`XdPATTERN` - *Generates `X` random numbers following given `PATTERN`*"
+				],
+				"unspecified": [
+					"`X` - *Will becomes 1*",
+					"`Y` - *Will becomes 6 in XdY case or 0 in XdY..Z case*",
+					"`Z` - *Will becomes 0*"
+				],
+				"notes": [
+					"There can be multiple arguments, each seperated with spaces",
+					"`PATTERN` uses values seperated with commas, like here: `3,8,9,6,2`",
+					"`X` cannot be a negative value"
+				],
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			}
+		},
+
+		"general":
+		{
+			"help":
+			{
+				"syntax": "[Command]",
+				"short": "The maid's guidelines",
+				"description": "This command will open the maid's guidelines, where is located the `command` when specified or gives a summary if nothing is given.",
+				"arguments": [
+					"`Command` - *Search for a specefic command*"
+				],
+				"unspecified": [
+					"`Command` - *It will instead opens a summary of avaible commands*"
+				],
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			},
+			"template":
+			{
+				"syntax": "",
+				"short": "",
+				"description": [ "... Here goes description ..." ]
+			}
+		}
+	},
+
+	"system":
+	{
+
+	}
+}

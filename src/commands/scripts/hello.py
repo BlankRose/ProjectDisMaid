@@ -5,45 +5,32 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:38:10 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-import discord
-import random as rng
+from src.core.locals import get_local
 from src.utils import construct
+import random as rng
+import discord
 
 class Hello:
 
+	LOC_BASE = "command.scripts.hello"
 	COMMAND = "hello"
 	ALIAS = ["hai"]
-
-	SYNTAX = COMMAND
 	ICON = "💬"
-
-	SHORT = ICON + " Giving a warm welcome to the maid is always appreciable"
-	DESCRIPTION = \
-"""
-Giving out a warm welcome to the hard working maid is always \
-appreciated and means a lot to them!~ xoxo~
-
-__ARGUMENTS:__
-`None` - *Doesn't contains any arguments*
-
-__REQUIERED PERMISSIONS:__
-Application: `None`
-Caller: `None`
-"""
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			async def run(ctx: discord.Interaction):
 				caseA = ["Hai sweetheart~",
 						"Hello there~",

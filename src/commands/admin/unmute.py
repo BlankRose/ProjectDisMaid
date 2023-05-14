@@ -5,53 +5,31 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 21:02:36 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:42:08 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from src.core.locals import get_local
 from src.utils import predicates
 import discord
 
 class Unmute:
 
+	LOC_BASE = "command.admin.unmute"
 	COMMAND = "unmute"
 	ALIAS = ["demute"]
-
-	SYNTAX = COMMAND + " <User> [DM]"
 	ICON = "🔊"
-
-	SHORT = ICON + " Lift off any silence punishments"
-	DESCRIPTION = \
-"""
-A basic command to unmute someone, giving them back the right \
-to talk. Did the mute finally calmed them down?
-
-__ARGUMENTS:__
-`User` - *User to target*
-`DM` - *Wether or not we shall notify the user in their DMs*
-
-__UNSPECIFIED VALUES:__
-`DM` - *Will be treated as* `True`
-
-__SIDE NOTES:__
-If you went for role-based mutes and have changed to a different \
-roles, members who has been muted before hand might be still \
-muted. So watch out for that in case you can't unmute them!
-
-__REQUIERED PERMISSIONS:__
-Application: `Moderate Members`
-Caller: `Moderate Members`
-"""
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
+		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
-			@cmd.command(name = i, description = self.SHORT)
+			@cmd.command(name = i, description = short)
 			@discord.app_commands.describe(
 				user = "User to unmute",
 				dm = "Wether or not a notification should be sent")

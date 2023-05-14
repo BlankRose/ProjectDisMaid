@@ -5,10 +5,11 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 22:16:17 CET 2023      #
+#       //\   /         Last Updated: Sun May 14 17:15:33 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+from src.core.locals import load_locals
 from src.core import logs, configs
 from src import commands, events
 from pathlib import Path
@@ -39,7 +40,7 @@ This project was made to come with as many features as \
 you could see on many bots while being fully free to use, \
 without any paywalls or any voting requirements.
 
-Support server:   [[Mystical Island](https://discord.gg/YDvpNYCcQf)]
+Support server:   [[Starlands](https://discord.gg/pPvPtBWrcp)]
 Source (Github):  [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid)]
 """
 
@@ -104,6 +105,8 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 						important=(("token", str),),
 						options=(("maxLogs", int, 5),))):
 		logs.Logs.danger("ABORTING..")
+
+	load_locals("lang")
 
 	info.clean(data["maxLogs"])
 	return (data["token"])

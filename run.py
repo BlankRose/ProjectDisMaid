@@ -10,13 +10,15 @@
 # ********************************************************************* #
 
 import sys
+
 if sys.version_info[0] < 3:		exit(print(f"Python >= 3.10 requierd!\nCurrently using: {sys.version}"))
 if sys.version_info[1] < 10:	exit(print(f"Python >= 3.10 requierd!\nCurrently using: {sys.version}"))
 
-from src.core import client
+import logging as log
 from datetime import datetime
 from pathlib import Path
-import logging as log
+
+from src.core import client
 
 cwd 		= Path.cwd()
 config_file	= "configs.json"
