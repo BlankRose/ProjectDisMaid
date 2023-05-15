@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:15:33 CEST 2023     #
+#       //\   /         Last Updated: Mon May 15 18:50:57 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -68,8 +68,8 @@ Source (Github):  [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid
 		log.info("The client is ready for usage!")
 
 	async def on_disconnect(self):
-		print("🎑\033[1;31m The maid has left the town.. \033[0m")
-		log.info("The connection has been terminated!")
+		print("🎑\033[1;33m The maid has took a break.. \033[0m")
+		log.info("The connection has been lost! Retrying..")
 
 	async def on_connect(self):
 		print("👒\033[1;32m The maid has came online! \033[0m")

@@ -58,9 +58,8 @@
 					"`User` - *User to target*",
 					"`DM` - *Wether or not we shall notify the user in their DMs*"
 				],
-				"unspecified": [
-					"`DM` - *Will be treated as* `True`"
-				],
+				"unspecified":
+					"`DM` - *Will be treated as* `True`",
 				"notes": [
 					"If you went for role-based mutes and have changed to a different",
 					"roles, members who has been muted before hand might be still",
@@ -79,12 +78,10 @@
 				"syntax": "[User]",
 				"short": "Displays leveling statistics",
 				"description": "Displays some detailed stats about the target's levels, if the leveling system is enabled within the server.",
-				"arguments": [
-					"`User` - *Targetted User to show stats off*"
-				],
-				"unspecified": [
-					"`User` - *It will target the caller by default*"
-				],
+				"arguments":
+					"`User` - *Targetted User to show stats off*",
+				"unspecified":
+					"`User` - *It will target the caller by default*",
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
@@ -204,9 +201,7 @@
 					"`Origin Channel` - *Channel where is located the embed to duplicate*",
 					"`Target Channel` - *Channel where to post the new embed*"
 				],
-				"unspecified": [
-					"`Channel` - *Will search / post the embed in the current channel*"
-				],
+				"unspecified": "`Channel` - *Will search / post the embed in the current channel*",
 				"permissions": [
 					"Application: `Send Messages`",
 					"Caller: `Manage Messages`"
@@ -220,9 +215,8 @@
 				"syntax": "",
 				"short": "Giving a warm welcome to the maid is always appreciable",
 				"description": "Giving out a warm welcome to the hard working maid is always appreciated and means a lot to them!~ xoxo~",
-				"arguments": [
-					"`None` - *Doesn't contains any arguments*"
-				],
+				"arguments":
+					"`None` - *Doesn't contains any arguments*",
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
@@ -258,27 +252,39 @@
 
 		"general":
 		{
-			"help":
-			{
+			"help": {
 				"syntax": "[Command]",
 				"short": "The maid's guidelines",
 				"description": "This command will open the maid's guidelines, where is located the `command` when specified or gives a summary if nothing is given.",
+				"arguments":
+					"`Command` - *Search for a specefic command*",
+				"unspecified":
+					"`Command` - *It will instead opens a summary of avaible commands*",
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
+				]
+			},
+			"language": {
+				"syntax": "<Language>",
+				"short": "Change the language for your interactions",
+				"description": "Defines the language that will be used whenever you will interact with the maid.",
 				"arguments": [
-					"`Command` - *Search for a specefic command*"
-				],
-				"unspecified": [
-					"`Command` - *It will instead opens a summary of avaible commands*"
+					"`Language` - *Localization to use*",
+					"",
+					"Can be of the following:",
+					" `en-us` - English",
+					" `fr-fr` - Français"
 				],
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
 				]
 			},
-			"template":
-			{
+			"template": {
 				"syntax": "",
 				"short": "",
-				"description": [ "... Here goes description ..." ]
+				"description": "... Here goes description ..."
 			}
 		}
 	},

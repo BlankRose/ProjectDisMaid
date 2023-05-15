@@ -1,3 +1,13 @@
 {
-	
+	"command":
+	{
+		"base":
+		{
+			"arguments": "__ARGUMENTS:__",
+			"sub_arguments": "__SOUS ARGUMENTS:__",
+			"unspecified": "__VALEURS NON SPECIFIEES:__",
+			"notes": "__NOTES SUPPLEMENTAIRES:__",
+			"permissions": "__PERMISSIONS REQUISES:__"
+		}
+	}
 }

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 23:44:16 CET 2023      #
+#       //\   /         Last Updated: Mon May 15 15:31:08 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -36,7 +36,7 @@ class Storage:
 	folder: str = "data"
 	file: str = "data.csv"
 
-	columns = ['id']
+	columns = ['id', 'lang']
 	data: pd.DataFrame = None
 
 	#==-----==#
