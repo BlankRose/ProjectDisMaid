@@ -5,12 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:12:53 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 21:42:12 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core.locals import get_local
 from src.utils import construct, predicates
+from src.core import database
 import discord
 
 class Embed_Clone:
@@ -37,12 +38,14 @@ class Embed_Clone:
 			async def run(ctx: discord.Interaction, message_id: str,
 				origin_channel: discord.TextChannel = None, target_channel: discord.TextChannel = None):
 
+				lang = database.fetch(-1, ctx.user.id).values[0]
+
 				if await predicates.from_guild(ctx, False):
 					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True)): return
 					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True)): return
 
 				if not message_id.isdigit():
-					return await construct.reply(ctx, "The message ID doesn't actually looks like an ID.. It should be composed for digits!")
+					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.wrong_id'))
 
 				if not origin_channel:
 					origin_channel = ctx.channel
@@ -52,11 +55,11 @@ class Embed_Clone:
 				try:
 					target = await origin_channel.fetch_message(int(message_id))
 				except:
-					return await construct.reply(ctx, "I couldnt fetch the given message! Are you sure its the right Channel and ID?..")
+					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.error'))
 
 				embed = target.embeds[0]
 				if not embed:
-					return await construct.reply(ctx, "The specified message doesn't contains any embed! You can create one with `/embed`.")
+					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.no_embed'))
 
 				await target_channel.send(embed = embed)
 				await construct.reply(ctx)

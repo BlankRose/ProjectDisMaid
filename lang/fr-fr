@@ -1,13 +1,337 @@
 {
+	"system":
+	{
+		"description": [
+			"Juste une petite souris maid pour tous vos besoins~\n",
+			"Ce projet a été créé pour offrir autant de fonctionnalités que vous pouvez en voir sur de nombreux bots, tout en étant entièrement gratuit, sans aucun paiement requis ni aucune condition de vote.\n",
+			"Serveur de support: [[Starlands](https://discord.gg/pPvPtBWrcp)]",
+			"Source (Github): [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid)]"
+		],
+		"error": "Je suis désolé, un problème est survenu lors de la gestion de votre demande...",
+		"timeout": "Cette interaction a expiré !",
+		"wip": "Prochainement..."
+	},
+
+	"categories":
+	{
+		"admin": {
+			"title": "Administration du serveur",
+			"description": "Commandes qui gèrent la modération et les systèmes"
+		},
+		"messages": {
+			"title": "Messages système",
+			"description": "Commandes autour des messages systèmes variés"
+		},
+		"data": {
+			"title": "Rôles et Niveaux",
+			"description": "Commandes concernant l'implications des membres"
+		},
+		"scripts": {
+			"title": "Utilitaires et Divertissements",
+			"description": "Commandes destinées à diversifier les serveurs"
+		}
+	},
+
 	"command":
 	{
 		"base":
 		{
+			"aliases": "__Aliases:__",
 			"arguments": "__ARGUMENTS:__",
 			"sub_arguments": "__SOUS ARGUMENTS:__",
 			"unspecified": "__VALEURS NON SPECIFIEES:__",
 			"notes": "__NOTES SUPPLEMENTAIRES:__",
 			"permissions": "__PERMISSIONS REQUISES:__"
+		},
+
+		"admin":
+		{
+			"debug": {
+				"syntax": "",
+				"short": "Commande à des fins de test",
+				"description": "Commande à des fins de test...\nCelle-ci est généralement instable et peut ne pas répondre en raison d'erreurs internes (mais au moins elle est protégée)",
+				"arguments":
+					"`Aucun` - *Ne contient aucun argument*",
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				],
+				"error": "Seul mon propriétaire peut me demander d'effectuer cette tâche dangereuse !"
+			},
+			"mute": {
+				"syntax": "<Utilisateur> [Temps] [Raison] [DM]",
+				"short": "Réduire au silence toute personne qui se comporte mal",
+				"description": "Une commande de base pour réduire au silence quelqu'un avec des paramètres supplémentaires. Nous espérons que le silence pourra calmer ces personnes méchantes...",
+				"arguments": [
+					"`Utilisateur` - *Utilisateur à cibler (ne m'utilisez pas s'il vous plaît)*",
+					"`Temps` - *Combien de temps ils doivent être réduits au silence*",
+					"`Raison` - *Pourquoi voulez-vous les réduire au silence*",
+					"`DM` - *Indique si nous devons avertir l'utilisateur dans ses messages privés*"
+				],
+				"unspecified": [
+					"`Temps` - *Sera traité comme* `inf`",
+					"`DM` - *Sera traité comme* `True`"
+				],
+				"notes": [
+					"`Temps` peut être défini comme suit : `.y.d.h.m.s` (où les points sont des chiffres)",
+					"`Temps` peut également être défini sur `inf` pour un silence à long terme",
+					"Par défaut, cette commande utilisera la fonction de temporisation de Discord, mais celle-ci",
+					"est limitée à 28 jours par l'API ! Ce comportement peut être basculé vers",
+					"une mise en sourdine basée sur les rôles, ce qui permet une durée de mise en sourdine bien plus longue (actuellement en cours de développement)"
+				],
+				"permissions": [
+					"Application : `Modérer les membres`",
+					"Appelant : `Modérer les membres`"
+				]
+			},
+			"unmute": {
+				"syntax": "<Utilisateur> [DM]",
+				"short": "Lever toute forme de sanction de silence",
+				"description": "Une commande de base pour lever le silence sur quelqu'un, lui redonnant ainsi le droit de parler. Le silence les a-t-il enfin calmés ?",
+				"arguments": [
+					"`Utilisateur` - *Utilisateur à cibler*",
+					"`DM` - *Indique si nous devons avertir l'utilisateur dans ses messages privés*"
+				],
+				"unspecified":
+					"`DM` - *Sera traité comme* `True`",
+				"notes": [
+					"Si vous avez utilisé des mises en sourdine basées sur les rôles et que vous avez changé pour un rôle différent,",
+					"les membres qui ont été mis en sourdine auparavant pourraient encore l'être.",
+					"Veillez donc à bien vérifier cela au cas où vous ne pourriez pas les démuter !"
+				],
+				"permissions": [
+					"Application : `Modérer les membres`",
+					"Appelant : `Modérer les membres`"
+				]
+			}
+		},
+
+		"messages":
+		{
+			"embed": {
+				"syntax": "[Salon] [Titre] [Description] [Couleur]",
+				"short": "Crée un nouvel embed",
+				"description": "Crée un nouvel embed de base n'importe où avec le contenu de votre choix, qui peut être modifié ultérieurement à l'aide de la commande `embed_edit`, offrant encore plus de contrôle sur le design.",
+				"arguments": [
+					"`Salon` - *Salon où publier le nouvel embed*",
+					"`Titre` - *Texte de l'en-tête de l'embed*",
+					"`Description` - *Contenu du corps de l'embed*",
+					"`Couleur` - *Couleur de la barre latérale de l'embed, définie en hexadécimal*"
+				],
+				"unspecified": [
+					"`Salon` - *Publiera l'embed dans le salon actuel*",
+					"`Titre` - *Ne rien afficher, mais DOIT être défini si Description ne l'est pas*",
+					"`Description` - *Ne rien afficher, mais DOIT être définie si Titre ne l'est pas*",
+					"`Couleur` - *Utilisera la couleur par défaut*"
+				],
+				"notes": [
+					"En raison des limitations de Discord, les embeds ont des limites prédéfinies :",
+					" - Les `Titres` sont limités à **256** caractères",
+					" - Les `Descriptions` sont limitées à **4096** caractères",
+					" - Les `Embeds` peuvent contenir jusqu'à **25** champs",
+					" - Les `Titres des champs` sont limités à **256** caractères",
+					" - Les `Descriptions des champs` sont limitées à **1024** caractères",
+					" - Les `Pieds de page` sont limités à **2048** caractères",
+					" - Le `Nom de l'auteur` est limité à **256** caractères",
+					" - Enfin, le nombre total de caractères ne peut pas dépasser **6000**"
+				],
+				"permissions": [
+					"Application : `Envoyer des messages`",
+					"Appelant : `Gérer les messages`"
+				],
+				"empty": "Vous devez spécifier au moins un titre OU une description !",
+				"limited": "En raison des limitations de Discord, les titres sont limités à 256 caractères et les descriptions à 4096 caractères !",
+				"color_invalid": "Code couleur invalide spécifié en paramètre !",
+				"color_long": "La valeur de couleur doit comporter au maximum 6 caractères !"				
+			},
+			"embed_edit": {
+				"syntax": "<ID du message> <Sous-commande> [Salon] ...",
+				"short": "Modifie un embed existant",
+				"description": "Modifie un embed existant (peut être créé avec la commande embed) et offre encore plus de contrôle et de flexibilité sur sa conception avec ses différentes sous-commandes.",
+				"arguments": [
+					"`ID du message` - *Message contenant l'embed à modifier*",
+					"`Salon` - *Salon où se trouve l'embed à modifier*",
+					"`Sous-commandes` - *Commandes à exécuter, qui peuvent être:*",
+					"",
+					"`add_field` - *Ajoute un champ normal, à l'index spécifié*",
+					"ARGS: <Titre ET/OU Description> [Inline] [Index]",
+					"`add_footer` - *Ajoute un champ de pied de page (remplace)*",
+					"ARGS: <Description> [URL de l'Image]",
+					"`add_author` - *Ajoute un champ d'auteur (remplace)*",
+					"ARGS: <Description> [URL de l'Image]",
+					"`set_body` - *Modifie le contenu du champ principal*",
+					"ARGS: <Titre ET/OU Description>",
+					"`set_field` - *Modifie le contenu de n'importe quel champ*",
+					"ARGS: <Titre ET/OU Description> [Inline] [Index]",
+					"`set_thumbnail` - *Modifie la vignette*",
+					"ARGS: [URL de l'Image]",
+					"`set_title` - *Modifie le titre du corps OU d'un champ lorsque l'index est spécifié*",
+					"ARGS: <Titre> [Index]",
+					"`set_description` - *Modifie la description du corps OU d'un champ lorsque l'index est spécifié*",
+					"ARGS: <Description> [Index]",
+					"`set_color` - *Modifie la couleur*",
+					"ARGS: <Couleur hexadécimale (dans le Titre OU la Description)>",
+					"`del_field` - *Supprime un champ, à l'index spécifié*",
+					"ARGS: <Index>",
+					"`del_title` - *Supprime le titre du corps OU d'un champ lorsque l'index est spécifié*",
+					"ARGS: [Index]",
+					"`del_description` - *Supprime la description du corps OU d'un champ lorsque l'index est spécifié*",
+					"ARGS: [Index]",
+					"`del_footer` - *Supprime le champ de pied de page*",
+					"`del_author` - *Supprime le champ d'auteur*",
+					"`del_all_fields` - *Supprime tous les champs*",
+					"`get_color` - *Récupère la couleur*"
+				],
+				"sub_arguments": [
+					"`Titre` - *Texte de l'en-tête du champ*",
+					"`Description` - *Contenu du corps du champ*",
+					"`URL de l'Image` - *URL de l'image à afficher OU suppression de l'image dans le contexte de la vignette*",
+					"`Inline` - *Si les champs doivent être alignés sur la même ligne ou non*",
+					"`Index` - *Position du champ (de 1 au nombre de champs)*"
+				],
+				"unspecified": [
+					"`Salon` - *Recherche l'embed dans le salon actuel*",
+					"`Titre Description` - *Ne rajoute rien de nouveau à l'embed, MAIS l'un des deux doit être spécifié !*",
+					"`URL de l'Image` - *Ne pas afficher d'images*",
+					"`Inline` - *Sera défini sur False*",
+					"`Index` - *Sera considéré comme l'index le plus élevé*"
+				],
+				"notes": [
+					"En raison des limitations de Discord, les embeds ont des limites définies comme suit :",
+					" - Les `Titres` sont limités à **256** caractères",
+					" - Les `Descriptions` sont limitées à **4096** caractères",
+					" - Les `Embeds` peuvent contenir jusqu'à **25** champs",
+					" - Les `Titres des champs` sont limités à **256** caractères",
+					" - Les `Descriptions des champs` sont limitées à **1024** caractères",
+					" - Les `Pieds de page` sont limités à **2048** caractères",
+					" - Le `Nom de l'auteur` est limité à **256** caractères",
+					" - Enfin, le nombre total de caractères ne peut pas dépasser **6000**",
+					"Les arguments supplémentaires non utilisés par les sous-commandes seront ignorés."
+				],
+				"permissions": [
+					"Application : Envoyer des messages",
+					"Appelant : Gérer les messages"
+				]
+			},
+			"embed_clone": {
+				"syntax": "<ID du message> [Salon d'origine] [Salon cible]",
+				"short": "Duplique un embed existant",
+				"description": "Duplique un embed existant dans le même salon ou dans un autre salon. Cet outil peut être utilisé si vous avez préparé l'embed dans un salon de test et souhaitez l'exporter dans un salon public, ou si vous souhaitez le modifier sans changer l'original.",
+				"arguments": [
+					"`ID du message` - *Message contenant l'embed à dupliquer*",
+					"`Salon d'origine` - *Salon où se trouve l'embed à dupliquer*",
+					"`Salon cible` - *Salon où publier le nouvel embed*"
+				],
+				"unspecified":
+					"`Salon` - *Recherche / publie l'embed dans le salon actuel*",
+				"permissions": [
+					"Application : `Envoyer des messages`",
+					"Appelant : `Gérer les messages`"
+				],
+				"wrong_id": "L'ID du message ne semble pas être un ID valide.. Il doit être composé de chiffres !",
+				"error": "Je n'ai pas pu récupérer le message donné ! Êtes-vous sûr du Salon et de l'ID ?..",
+				"no_embed": "Le message spécifié ne contient aucun embed ! Vous pouvez en créer un avec `/embed`."
+			}
+		},
+
+		"data":
+		{
+			"level": {
+				"syntax": "[Utilisateur]",
+				"short": "Affiche les statistiques de niveau",
+				"description": "Affiche des statistiques détaillées sur les niveaux de la cible, si le système de niveaux est activé sur le serveur.",
+				"arguments":
+					"`Utilisateur` - *Utilisateur ciblé pour afficher les statistiques*",
+				"unspecified":
+					"`Utilisateur` - *Cible par défaut l'appelant*",
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				]
+			}
+		},
+
+		"scripts":
+		{
+			"hello": {
+				"syntax": "",
+				"short": "Faire un accueil chaleureux à la maid est toujours appréciable",
+				"description": "Faire un accueil chaleureux à la maid qui travaille dur est toujours apprécié et cela signifie beaucoup pour elle !~ xoxo~",
+				"arguments":
+					"`Aucun` - *Ne contient aucun argument*",
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				]
+			},
+			"random": {
+				"syntax": "[Arguments] ...",
+				"short": "Génère un ensemble de nombres totalement aléatoires",
+				"description": "Un générateur de nombres aléatoires quelque peu équilibré qui peut recevoir des paramètres multiples et complexes pour des lancers personnalisés. Voir ci-dessous pour plus de détails :",
+				"arguments": [
+					"`Aucun` - *Génère un nombre aléatoire entre 1 et 6*",
+					"`X` - *Génère `X` nombres aléatoires entre 1 et 6*",
+					"`XdY` - *Génère `X` nombres aléatoires entre 1 et `Y`*",
+					"`XdY..Z` - *Génère `X` nombres aléatoires entre `Y` et `Z`*",
+					"`XdPATTERN` - *Génère `X` nombres aléatoires en suivant le `PATTERN` donné*"
+				],
+				"unspecified": [
+					"`X` - *Devient 1*",
+					"`Y` - *Devient 6 dans le cas de XdY ou 0 dans le cas de XdY..Z*",
+					"`Z` - *Devient 0*"
+				],
+				"notes": [
+					"Il peut y avoir plusieurs arguments, chacun séparé par des espaces",
+					"`PATTERN` utilise des valeurs séparées par des virgules, comme ici: `3,8,9,6,2`",
+					"`X` ne peut pas avoir de valeur négative"
+				],
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				]
+			}
+		},
+
+		"general":
+		{
+			"help": {
+				"syntax": "[Commande]",
+				"short": "Le guide de la maid",
+				"description": "Cette commande ouvre le guide de la maid, où se trouve la `commande` spécifiée ou affiche un résumé si rien n'est donné.",
+				"arguments":
+					"`Commande` - *Recherche d'une commande spécifique*",
+				"unspecified":
+					"`Commande` - *Ouvre un résumé des commandes disponibles*",
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				],
+				"placeholder": "Plus de commandes...",
+				"found": "Voici ce que j'ai trouvé:",
+				"notfound": "Désolé, je n'ai trouvé aucune entrée dans le guide.",
+				"listed": "Voici une liste de commandes que vous pouvez effectuer avec moi :",
+				"selector_notice": "Pour afficher les commandes, veuillez utiliser le sélecteur ci-dessous.",
+				"selector_switch": "Voici les commandes pour la catégorie demandée:",
+				"title": "**Guide des Maids**",
+				"footer": "Édité par Rosie#4721 - 2022"
+			},
+			"language": {
+				"syntax": "<Langue>",
+				"short": "Changer la langue pour vos interactions",
+				"description": "Définit la langue qui sera utilisée chaque fois que vous interagirez avec la maid.",
+				"arguments": [
+					"`Langue` - *Localisation à utiliser*",
+					"",
+					"Peut être l'une des options suivantes:",
+					" `en-us` - English",
+					" `fr-fr` - Français"
+				],
+				"permissions": [
+					"Application : `Aucune`",
+					"Appelant : `Aucune`"
+				],
+				"success": "La langue a été définie avec succès sur le Français !"
+			}
 		}
 	}
 }

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:53:11 CET 2023      #
+#       //\   /         Last Updated: Tue May 16 18:50:44 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,6 +15,5 @@ class Messages:
 	__all__ = ["embed", "embed_edit", "embed_clone"]
 	entries = import_entries(__all__, "src.commands.messages")
 
+	LOC_BASE = "categories.messages"
 	ICON = "📯"
-	TITLE = "System Messages"
-	DESCRIPTION = "Commands that revolves around system messages"

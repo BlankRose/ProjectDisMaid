@@ -5,12 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon May 15 18:50:57 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 20:36:16 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core.locals import load_locals
-from src.core import logs, configs
+from src.core import logs, configs, database
 from src import commands, events
 from pathlib import Path
 import sys
@@ -29,20 +29,6 @@ class Client(discord.Client):
 	cmds: `CommandTree`
 		Command tree of the running instance
 	"""
-
-	#==-----==#
-
-	DESCRIPTION = \
-"""
-Just a silly maid mouse for all of your needs~
-
-This project was made to come with as many features as \
-you could see on many bots while being fully free to use, \
-without any paywalls or any voting requirements.
-
-Support server:   [[Starlands](https://discord.gg/pPvPtBWrcp)]
-Source (Github):  [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid)]
-"""
 
 	#==-----==#
 
@@ -80,6 +66,7 @@ Source (Github):  [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid
 	async def close(self):
 		print("🎑\033[1;31m The maid has left the town.. \033[0m")
 		log.info("The connection has been terminated!")
+		database.save()
 		await super().close()
 
 	#==-----==#
@@ -106,6 +93,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 						options=(("maxLogs", int, 5),))):
 		logs.Logs.danger("ABORTING..")
 
+	database.load()
 	load_locals("lang")
 
 	info.clean(data["maxLogs"])

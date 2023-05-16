@@ -1,8 +1,42 @@
 {
+	"system":
+	{
+		"description": [
+			"Just a silly maid mouse for all of your needs~\n",
+			"This project was made to come with as many features as you could see on many bots while being fully free to use, without any paywalls or any voting requirements.\n",
+			"Support server: [[Starlands](https://discord.gg/pPvPtBWrcp)]",
+			"Source (Github): [[Project DisMaid](https://github.com/BlankRose/ProjectDisMaid)]"
+		],
+		"timeout": "This interaction has timed out !",
+		"error": "I'm sorry, an problem occured while trying to handle your request..",
+		"wip": "Comming Soon..."
+	},
+
+	"categories":
+	{
+		"admin": {
+			"title": "Server Administration",
+			"description": "Commands which handles moderations and systems"
+		},
+		"messages": {
+			"title": "System Messages",
+			"description": "Commands that revolves around system messages"
+		},
+		"data": {
+			"title": "Roles & Levels",
+			"description": "Commands about any kind of enrolling"
+		},
+		"scripts": {
+			"title": "Utilities & Entertainment",
+			"description": "Commands mostly here to diversify a bit the server"
+		}
+	},
+
 	"command":
 	{
 		"base":
 		{
+			"aliases": "__Aliases:__",
 			"arguments": "__ARGUMENTS:__",
 			"sub_arguments": "__SUB ARGUMENTS:__",
 			"unspecified": "__UNSPECIFIED VALUES:__",
@@ -16,13 +50,13 @@
 				"syntax": "",
 				"short": "Testing purpose command",
 				"description": "Testing purpose command..\nThis is usually unstable and may not responds due to internal errors (but atleast it is protected)",
-				"arguments": [
-					"`None` - *Doesn't contains any arguments*"
-				],
+				"arguments":
+					"`None` - *Doesn't contains any arguments*",
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
-				]
+				],
+				"error": "I may only allow my Owner to ask me to do this dangerous task !"
 			},
 			"mute": {
 				"syntax": "<User> [Time] [Reason] [DM]",
@@ -42,7 +76,7 @@
 					"`Time` can be set as following `.y.d.h.m.s` (where dots are numbers)",
 					"`Time` can also be set to `inf` for long term mute",
 					"By default, this command will use discord's timeout feature but this",
-					"one is limited to 28 days by the API! This behavior can be switch to",
+					"one is limited to 28 days by the API ! This behavior can be switch to",
 					"role-based which allows much longer mute timespan (currently WIP)"
 				],
 				"permissions": [
@@ -63,28 +97,11 @@
 				"notes": [
 					"If you went for role-based mutes and have changed to a different",
 					"roles, members who has been muted before hand might be still",
-					"muted. So watch out for that in case you can't unmute them!"
+					"muted. So watch out for that in case you can't unmute them !"
 				],
 				"permissions": [
 					"Application: `Moderate Members`",
 					"Caller: `Moderate Members`"
-				]
-			}
-		},
-
-		"data":
-		{
-			"level": {
-				"syntax": "[User]",
-				"short": "Displays leveling statistics",
-				"description": "Displays some detailed stats about the target's levels, if the leveling system is enabled within the server.",
-				"arguments":
-					"`User` - *Targetted User to show stats off*",
-				"unspecified":
-					"`User` - *It will target the caller by default*",
-				"permissions": [
-					"Application: `None`",
-					"Caller: `None`"
 				]
 			}
 		},
@@ -121,7 +138,11 @@
 				"permissions": [
 					"Application: `Send Messages`",
 					"Caller: `Manage Messages`"
-				]
+				],
+				"empty": "You need to specify atleast a title OR a description!",
+				"limited": "Due to discord's limitations, Titles are limited to 256 characters and Descriptions are limited to 4096!",
+				"color_invalid": "Invalid color code given in parameter!",
+				"color_long": "Color value must be at maximum 6 character long!"
 			},
 			"embed_edit": {
 				"syntax": "<Message ID> <Sub Command> [Channel] ...",
@@ -170,7 +191,7 @@
 				],
 				"unspecified": [
 					"`Channel` - *Will search the embed in the current channel*",
-					"`Title` `Description` - *Won't add anything new to the embed BUT one must be specified!*",
+					"`Title` `Description` - *Won't add anything new to the embed BUT one must be specified !*",
 					"`Image URL` *Won't display any images*",
 					"`Inline` - *Will be defined as False*",
 					"`Index` - *Will be considered the very last index*"
@@ -201,10 +222,31 @@
 					"`Origin Channel` - *Channel where is located the embed to duplicate*",
 					"`Target Channel` - *Channel where to post the new embed*"
 				],
-				"unspecified": "`Channel` - *Will search / post the embed in the current channel*",
+				"unspecified":
+					"`Channel` - *Will search / post the embed in the current channel*",
 				"permissions": [
 					"Application: `Send Messages`",
 					"Caller: `Manage Messages`"
+				],
+				"wrong_id": "The message ID doesn't actually looks like an ID.. It should be composed for digits!",
+				"error": "I couldnt fetch the given message! Are you sure its the right Channel and ID?..",
+				"no_embed": "The specified message doesn't contains any embed! You can create one with `/embed`."
+			}
+		},
+
+		"data":
+		{
+			"level": {
+				"syntax": "[User]",
+				"short": "Displays leveling statistics",
+				"description": "Displays some detailed stats about the target's levels, if the leveling system is enabled within the server.",
+				"arguments":
+					"`User` - *Targetted User to show stats off*",
+				"unspecified":
+					"`User` - *It will target the caller by default*",
+				"permissions": [
+					"Application: `None`",
+					"Caller: `None`"
 				]
 			}
 		},
@@ -214,7 +256,7 @@
 			"hello": {
 				"syntax": "",
 				"short": "Giving a warm welcome to the maid is always appreciable",
-				"description": "Giving out a warm welcome to the hard working maid is always appreciated and means a lot to them!~ xoxo~",
+				"description": "Giving out a warm welcome to the hard working maid is always appreciated and means a lot to them !~ xoxo~",
 				"arguments":
 					"`None` - *Doesn't contains any arguments*",
 				"permissions": [
@@ -263,7 +305,15 @@
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
-				]
+				],
+				"placeholder": "More commands...",
+				"found": "Here is what I found:",
+				"notfound": "Sorry, I didn't found any entry in the guidelines.",
+				"listed": "Here a list of commands you can do with me:",
+				"selector_notice": "To view commands, please use the selector below.",
+				"selector_switch": "Here's the commands for the requested category:",
+				"title": "**Maids' Guidelines**",
+				"footer": "Edited by Rosie#4721 - 2022"
 			},
 			"language": {
 				"syntax": "<Language>",
@@ -279,18 +329,9 @@
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
-				]
-			},
-			"template": {
-				"syntax": "",
-				"short": "",
-				"description": "... Here goes description ..."
+				],
+				"success": "Language has been successfully set to English !"
 			}
 		}
-	},
-
-	"system":
-	{
-
 	}
 }

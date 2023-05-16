@@ -5,12 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 19:20:08 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 22:09:01 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core.locals import get_local
 from src.utils import construct
+from src.core import database
 from src.commands import *
 import logging as logs
 import discord
@@ -22,55 +23,62 @@ class Help:
 	ALIAS = ["commands", "guidelines", "cmds"]
 	ICON = "📕"
 
+	_tmp_options = []
+
 	#==-----==#
 
-	class Selector(discord.ui.View):
+	@staticmethod
+	def new_selector(ctx: discord.Interaction, base: discord.Embed, lang: str, *, timeout: float = 180):
 
 		options: list = [
 			discord.SelectOption(
-				label = category_details[x]().TITLE,
-				description = category_details[x]().DESCRIPTION,
+				label = get_local(lang, f"{category_details[x]().LOC_BASE}.title"),
+				description = get_local(lang, f"{category_details[x]().LOC_BASE}.description"),
 				emoji = category_details[x]().ICON,
 				value = x)
 			for x in categories]
 
-		def __init__(self, ctx: discord.Interaction, base: discord.Embed, *, timeout: float = 180):
-			super().__init__(timeout = timeout)
-			self.origin = ctx
-			self.embed = base
+		class Selector(discord.ui.View):
 
-		@discord.ui.select(options = options, placeholder = "More commands...")
-		async def callback(self, ctx: discord.Interaction, select: discord.ui.Select):
-			from src.commands import sub_entries
+			def __init__(self, ctx: discord.Interaction, base: discord.Embed, *, timeout: float = 180):
+				super().__init__(timeout = timeout)
+				self.origin = ctx
+				self.embed = base
 
-			target = sub_entries[select.values[0]]
-			self.embed.clear_fields()
-			self.embed.description = None
+			@discord.ui.select(options = options, placeholder = get_local(lang, Help.LOC_BASE + '.placeholder'))
+			async def callback(self, ctx: discord.Interaction, select: discord.ui.Select):
+				from src.commands import sub_entries
 
-			for i in target:
-				entry = target[i]()
-				syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
-				short = get_local("en-us", f"{entry.LOC_BASE}.short")
+				target = sub_entries[select.values[0]]
+				self.embed.clear_fields()
+				self.embed.description = None
 
-				self.embed.add_field(
-					name = f"/{entry.COMMAND} {syntax}",
-					value = f"{entry.ICON} {short}",
-					inline = False )
+				for i in target:
+					entry = target[i]()
+					syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
+					short = get_local(lang, f"{entry.LOC_BASE}.short")
 
-			await self.origin.edit_original_response(content = f"Here's the commands for the {select.values[0]} category:", embed = self.embed)
-			await ctx.response.send_message("Updated!", delete_after = 0)
+					self.embed.add_field(
+						name = f"/{entry.COMMAND} {syntax}",
+						value = f"{entry.ICON} {short}",
+						inline = False )
 
-		async def on_timeout(self) -> None:
-			try:
-				res = (await self.origin.original_response())
-				await res.edit(content = f"⚠️ *This interaction has timed out!*\n{res.content}", view = None)
-			except Exception as err:
-				logs.error(err)
-			return await super().on_timeout()
+				await self.origin.edit_original_response(content = get_local(lang, Help.LOC_BASE + '.selector_switch'), embed = self.embed)
+				await ctx.response.send_message("Updated!", delete_after = 0)
 
-		async def on_error(self, ctx: discord.Interaction, error: Exception, item, /) -> None:
-			await ctx.response("I'm sorry, an problem occured while trying to handle your request..")
-			return await super().on_error(ctx, error, item)
+			async def on_timeout(self) -> None:
+				try:
+					res = (await self.origin.original_response())
+					await res.edit(content = f"⚠️ *{get_local(lang, 'system.timeout')}*\n{res.content}", view = None)
+				except Exception as err:
+					logs.error(err)
+				return await super().on_timeout()
+
+			async def on_error(self, ctx: discord.Interaction, error: Exception, item, /) -> None:
+				await ctx.response(get_local(lang, 'system.error'))
+				return await super().on_error(ctx, error, item)
+
+		return Selector(ctx, base, timeout = timeout)
 
 	#==-----==#
 
@@ -93,11 +101,14 @@ class Help:
 			@discord.app_commands.autocomplete(command = autocomplete)
 			async def run(ctx: discord.Interaction, command: str = None):
 
+				# Retrieve User Language
+				lang = database.fetch(-1, ctx.user.id).values[0]
+
 				# Base Embed Structure
 				embed = discord.embeds.Embed()
 				embed.color = 0xb842ae
-				embed.title = "**Maids' Guidelines**"
-				embed.set_footer(text = "Edited by Rosie#4721 - 2022", icon_url = "https://i.imgur.com/w1BwX4h.png")
+				embed.title = get_local(lang, Help.LOC_BASE + '.title')
+				embed.set_footer(text = get_local(lang, Help.LOC_BASE + '.footer'), icon_url = "https://i.imgur.com/w1BwX4h.png")
 
 				# Default Behavior
 				if not command:
@@ -105,8 +116,8 @@ class Help:
 					for i in entries:
 						if i in non_categorized:
 							entry = entries[i]()
-							syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
-							short = get_local("en-us", f"{entry.LOC_BASE}.short")
+							syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
+							short = get_local(lang, f"{entry.LOC_BASE}.short")
 
 							embed.add_field(
 								name = f"/{entry.COMMAND} {syntax}",
@@ -115,31 +126,31 @@ class Help:
 
 					embed.add_field(
 						name = "",
-						value = "To view commands, please use the selector below.",
+						value = get_local(lang, Help.LOC_BASE + '.selector_notice'),
 						inline = False )
 
 					from src.core.client import Client
-					embed.description = Client.DESCRIPTION
+					embed.description = get_local(lang, 'system.description')
 
 					file_logo = discord.File("assets/logo.png", filename = "logo.png")
 					embed.set_thumbnail(url="attachment://logo.png")
-					await ctx.response.send_message("Here a list of commands you can do with me:", file = file_logo, embed = embed, ephemeral = True, view = Help.Selector(ctx, embed))
+					await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.listed'), file = file_logo, embed = embed, ephemeral = True, view = Help.new_selector(ctx, embed, lang))
 
 				# Search and Display Command
 				else:
 
 					if command in entries:
 						entry: Any = entries[command]()
-						syntax = get_local("en-us", f"{entry.LOC_BASE}.syntax")
-						description = construct.full_description("en-us", entry.LOC_BASE)
+						syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
+						description = construct.full_description(lang, entry.LOC_BASE)
 
 						embed.description = f"{entry.ICON} __**/{entry.COMMAND} {syntax}:**__"
 						if entry.ALIAS and len(entry.ALIAS) > 0:
-							embed.description += "\n__Aliases:__"
+							embed.description += "\n" + get_local(lang, 'command.base.aliases')
 							for i in entry.ALIAS:
 								embed.description += f" `{i}`"
 						if description and len(description) > 0:
 							embed.description += f"\n{description}"
-						await ctx.response.send_message("Here is what I found:", embed = embed, ephemeral = True)
+						await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.found'), embed = embed, ephemeral = True)
 					else:
-						await ctx.response.send_message("Sorry, I didn't found any entry in the guidelines.", ephemeral = True)
+						await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.notfound'), ephemeral = True)

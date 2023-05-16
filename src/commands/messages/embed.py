@@ -5,12 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:39:40 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 21:33:29 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core.locals import get_local
 from src.utils import construct, predicates
+from src.core import database
 import discord
 
 class Embed:
@@ -36,16 +37,18 @@ class Embed:
 				color = "Color of the embed in hexadecimal")
 			async def run(ctx: discord.Interaction, channel: discord.TextChannel = None, title: str = None, description: str = None, color: str = None):
 
+				lang = database.fetch(-1, ctx.user.id).values[0]
+
 				if await predicates.from_guild(ctx, False):
 					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True)): return
 					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True)): return
 
 				if not title and not description:
-					await construct.reply(ctx, "You need to specify atleast a title OR a description!")
+					await construct.reply(ctx, get_local(lang, Embed.LOC_BASE + '.empty'))
 					return
 
 				if (title and len(title) > 256) or (description and len(description) > 4096):
-					await construct.reply(ctx, "Due to discord's limitations, Titles are limited to 256 characters and Descriptions are limited to 4096!")
+					await construct.reply(ctx, get_local(lang, Embed.LOC_BASE + '.limited'))
 					return
 
 				res = None
@@ -53,8 +56,8 @@ class Embed:
 					if len(color) <= 6:
 						res = construct.parse_hexa(color)
 						if not res:
-							await construct.reply(ctx, "Invalid color code given in parameter!")
-					else:	await construct.reply(ctx, "Color value must be at maximum 6 character long!")
+							await construct.reply(ctx, get_local(lang, Embed.LOC_BASE + '.color_invalid'))
+					else: await construct.reply(ctx, get_local(lang, Embed.LOC_BASE + '.color_long'))
 
 				new_embed = discord.Embed(
 					title = title,

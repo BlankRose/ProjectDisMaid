@@ -5,11 +5,11 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon May 15 11:27:53 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 18:42:25 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
+from src.core import database, locals
 import discord
 
 class Language:
@@ -22,12 +22,27 @@ class Language:
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
+
+		async def autocomplete(_: discord.Interaction, current: str):
+			return [
+				discord.app_commands.Choice(name = entry, value = entry)
+				for entry in locals.available if current.lower() in entry.lower()
+			]
+
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + locals.get_local("en-us", f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
 			@cmd.command(name = i, description = short)
-			async def run(ctx: discord.Interaction):
-				await ctx.response.send_message("Command in progress..", ephemeral = True)
+			@discord.app_commands.describe(language = "Localization to use")
+			@discord.app_commands.autocomplete(language = autocomplete)
+			async def run(ctx: discord.Interaction, language: str):
+
+				if language.lower() not in locals.available:
+					await ctx.response.send_message("Sorry, this language is unavailable :(", ephemeral = True)
+					return
+
+				database.store(-1, ctx.user.id, language, 'lang')
+				await ctx.response.send_message(locals.get_local(language, f"{Language.LOC_BASE}.success"), ephemeral = True)

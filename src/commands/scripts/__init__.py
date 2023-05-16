@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Fri Mar 10 20:56:59 CET 2023      #
+#       //\   /         Last Updated: Tue May 16 18:53:26 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,6 +15,5 @@ class Scripts:
 	__all__ = ["hello", "random"]
 	entries = import_entries(__all__, "src.commands.scripts")
 
+	LOC_BASE = "categories.scripts"
 	ICON = "🎲"
-	TITLE = "Utilities & Entertainment"
-	DESCRIPTION = "Commands mostly here to diversify a bit the server"

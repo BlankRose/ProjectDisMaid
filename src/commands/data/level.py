@@ -5,11 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:41:00 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 21:56:09 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.core.locals import get_local
+from src.core import database
 import discord
 
 class Level:
@@ -30,4 +31,6 @@ class Level:
 
 			@cmd.command(name = i, description = short)
 			async def run(ctx: discord.Interaction, user: discord.User = None):
-				await ctx.response.send_message("How did we get here..?", ephemeral = True)
+
+				lang = database.fetch(-1, ctx.user.id).values[0]
+				await ctx.response.send_message(get_local(lang, 'system.wip'), ephemeral = True)

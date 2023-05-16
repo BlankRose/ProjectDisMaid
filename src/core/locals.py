@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 18:49:25 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 18:41:21 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+available: list[str] = []
 localizations: dict[str, Any] = {}
 FALLBACK: str = "en-us"
 
@@ -29,6 +30,7 @@ def load_locals(folder: Path | str) -> None:
 		if target.is_file():
 			with open(target) as f:
 				localizations[target.name] = json.load(f)
+				available.append(target.name)
 
 	#==-----==#
 

@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:38:21 CEST 2023     #
+#       //\   /         Last Updated: Tue May 16 21:26:42 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -53,8 +53,6 @@ class Random:
 						min = 0
 			else:
 				max = cur[1]
-
-		logging.debug(f"ROLLS: {rolls} =-= MIN: {min} =-= MAX: {max}")
 
 		try:
 			if int(max) < int(min):

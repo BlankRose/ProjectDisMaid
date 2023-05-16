@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 20:47:12 CET 2023      #
+#       //\   /         Last Updated: Tue May 16 18:50:39 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -15,6 +15,5 @@ class Data:
 	__all__ = ["level"]
 	entries = import_entries(__all__, "src.commands.data")
 
+	LOC_BASE = "categories.data"
 	ICON = "🔖"
-	TITLE = "Roles & Levels"
-	DESCRIPTION = "Commands about any kind of enrolling (Comming Soon..)"
