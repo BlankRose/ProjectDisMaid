@@ -1,10 +1,5 @@
 Translations to french:
- - Mute command
- - Unmute command
  - Embed Edit command
- - Hello command
- - Random command
- - Predicates messages
 
 Add a leveling system
  - Posibility for admins to:

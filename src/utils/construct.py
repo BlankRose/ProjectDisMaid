@@ -5,12 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 18:45:28 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 14:13:46 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from typing import Any
-from src.core.locals import get_local
+import src.core.localizations as lz
 import datetime
 import discord
 
@@ -145,10 +145,10 @@ def full_description(lang: str, loc_base: str) -> str:
 
 	for i in order:
 		local = f"{loc_base}.{i}"
-		tmp = get_local(lang, local)
+		tmp = lz.get_local(lang, local)
 
 		if not tmp == local:
 			if not i == order[0]:
-				output += "\n\n" + get_local(lang, f"{cmd_base}.{i}") + '\n'
+				output += "\n\n" + lz.get_local(lang, f"{cmd_base}.{i}") + '\n'
 			output += tmp
 	return output

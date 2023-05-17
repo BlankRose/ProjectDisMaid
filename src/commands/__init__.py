@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon May 15 11:26:17 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 14:38:03 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -20,7 +20,7 @@ _sub_t                      = dict[str | None, _entry_t]
 #-- DEFINITIONS --#
 
 root: str                   = "src.commands"
-categories: list[str]       = ["admin", "messages", "scripts", "data"]
+categories: list[str]       = ["admin", "messages", "data", "scripts"]
 non_categorized: list[str]  = ["help", "language"]
 
 category_details: _entry_t  = import_entries(categories, root)

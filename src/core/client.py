@@ -5,11 +5,11 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 20:36:16 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 14:13:13 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import load_locals
+import src.core.localizations as lz
 from src.core import logs, configs, database
 from src import commands, events
 from pathlib import Path
@@ -94,7 +94,7 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 		logs.Logs.danger("ABORTING..")
 
 	database.load()
-	load_locals("lang")
+	lz.load_locals("lang")
 
 	info.clean(data["maxLogs"])
 	return (data["token"])

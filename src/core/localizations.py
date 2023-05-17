@@ -5,11 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 18:41:21 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 13:48:06 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import json
+from src.core import database
 from pathlib import Path
 from typing import Any
 
@@ -34,7 +35,15 @@ def load_locals(folder: Path | str) -> None:
 
 	#==-----==#
 
-def get_local(lang: str, local: str, sep: str = '\n') -> str:
+def inplace_strings(content: str, *args: str) -> str:
+	for i, arg in enumerate(args):
+		placeholder = "{{" + str(i) + "}}"
+		content = content.replace(placeholder, arg)
+	return content
+
+	#==-----==#
+
+def get_local(lang: str, local: str, *args: str, sep: str = '\n') -> str:
 
 	def trigger_fallback() -> str:
 		if type(lang) is None or lang is not FALLBACK:
@@ -61,7 +70,7 @@ def get_local(lang: str, local: str, sep: str = '\n') -> str:
 		return trigger_fallback()
 
 	if type(load) is str:
-		return load
+		return inplace_strings(load, *args)
 	elif type(load) is list:
 		output: str = ""
 		for i in load:
@@ -70,10 +79,15 @@ def get_local(lang: str, local: str, sep: str = '\n') -> str:
 			output += i
 			if i is not load[-1]:
 				output += sep
-		return output
+		return inplace_strings(output, *args)
 	return trigger_fallback()
 
 	#==-----==#
 
 def get_raw_locals() -> dict[str, Any]:
 	return localizations
+
+	#==-----==#
+
+def get_userlang(user_id: int):
+	return database.fetch(-1, user_id, 'lang')

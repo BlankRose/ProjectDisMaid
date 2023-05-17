@@ -5,12 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:41:32 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 17:13:47 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
 from src.utils import construct
+import src.core.localizations as lz
 import discord
 
 class Debug:
@@ -39,15 +39,17 @@ class Debug:
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
 
 			@cmd.command(name = i, description = short)
 			async def run(ctx: discord.Interaction):
+				lang = lz.get_userlang(ctx.user.id)
 
 				if ctx.user.id != 353435819924652043:
-					return await construct.reply(ctx, "I may only allow my Owner to ask me to do this dangerous task!")
+					return await construct.reply(ctx, lz.get_local(lang, self.LOC_BASE + '.error'))
+
 				await ctx.response.send_message("Selector debug:", view = Debug.Selector(ctx), ephemeral = True)
 				await ctx.response.send_message("Should throws error...", ephemeral = True)

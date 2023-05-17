@@ -5,13 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 21:42:12 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 14:08:24 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
 from src.utils import construct, predicates
-from src.core import database
+import src.core.localizations as lz
 import discord
 
 class Embed_Clone:
@@ -25,7 +24,7 @@ class Embed_Clone:
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
@@ -37,15 +36,14 @@ class Embed_Clone:
 				target_channel = "Channel where to post the embed")
 			async def run(ctx: discord.Interaction, message_id: str,
 				origin_channel: discord.TextChannel = None, target_channel: discord.TextChannel = None):
+				lang = lz.get_userlang(ctx.user.id)
 
-				lang = database.fetch(-1, ctx.user.id).values[0]
-
-				if await predicates.from_guild(ctx, False):
-					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True)): return
-					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True)): return
+				if await predicates.from_guild(ctx, lang, False):
+					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True), lang): return
+					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True), lang): return
 
 				if not message_id.isdigit():
-					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.wrong_id'))
+					return await construct.reply(ctx, lz.get_local(lang, Embed_Clone.LOC_BASE + '.wrong_id'))
 
 				if not origin_channel:
 					origin_channel = ctx.channel
@@ -55,11 +53,11 @@ class Embed_Clone:
 				try:
 					target = await origin_channel.fetch_message(int(message_id))
 				except:
-					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.error'))
+					return await construct.reply(ctx, lz.get_local(lang, Embed_Clone.LOC_BASE + '.error'))
 
 				embed = target.embeds[0]
 				if not embed:
-					return await construct.reply(ctx, get_local(lang, Embed_Clone.LOC_BASE + '.no_embed'))
+					return await construct.reply(ctx, lz.get_local(lang, Embed_Clone.LOC_BASE + '.no_embed'))
 
 				await target_channel.send(embed = embed)
 				await construct.reply(ctx)

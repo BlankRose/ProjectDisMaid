@@ -12,6 +12,15 @@
 		"wip": "Prochainement..."
 	},
 
+	"predicates":
+	{
+		"dm": "Vous devez être en messages privés pour exécuter cette commande !",
+		"server": "Vous devez être dans un serveur pour exécuter cette commande !",
+		"user": "L'utilisateur spécifié est introuvable ! Êtes-vous sûr qu'il fait partie de ce serveur ?..",
+		"permission_user": "Vous n'avez pas les permissions suffisantes pour exécuter cette commande !",
+		"permission_maid": "Je n'ai pas les permissions suffisantes pour effectuer cette tâche !"
+	},
+
 	"categories":
 	{
 		"admin": {
@@ -82,7 +91,14 @@
 				"permissions": [
 					"Application : `Modérer les membres`",
 					"Appelant : `Modérer les membres`"
-				]
+				],
+				"maid": "Pourquoi voulez-vous tant me réduire au silence ? ;w;'",
+				"self": "Je ne pense pas pouvoir vous réduire au silence.. Mais pourquoi voudriez-vous vous taire ?",
+				"time": "Impossible d'analyser le temps spécifié : {{0}} !",
+				"fail": "Je n'ai pas réussi à réduire au silence l'utilisateur ciblé !",
+				"success": "L'utilisateur {{0}} a été réduit au silence avec succès jusqu'au {{1}} !",
+				"dm_base": "Vous avez été réduit au silence dans {{0}} jusqu'au {{1}}",
+				"dm_reason": " pour la raison suivante :\n{{0}}"
 			},
 			"unmute": {
 				"syntax": "<Utilisateur> [DM]",
@@ -102,7 +118,10 @@
 				"permissions": [
 					"Application : `Modérer les membres`",
 					"Appelant : `Modérer les membres`"
-				]
+				],
+				"fail": "Je n'ai pas réussi à rétablir la parole de l'utilisateur ciblé !",
+				"success": "L'utilisateur {{0}} a été rétabli avec succès !",
+				"dm": "Votre restriction a été levée dans {{0}} !"
 			}
 		},
 
@@ -262,6 +281,17 @@
 				"permissions": [
 					"Application : `Aucune`",
 					"Appelant : `Aucune`"
+				],
+				"first": [
+					"Bonjour mon chéri~",
+					"Coucou toi~",
+					"Salut !"
+				],
+				"second": [
+					"(^owo^)s *Miaou.*",
+					"Comment ça va ?",
+					"Tu veux des cookies ?",
+					"As-tu vu mon chat ? Je ne le trouve nulle part."
 				]
 			},
 			"random": {
@@ -288,7 +318,20 @@
 				"permissions": [
 					"Application : `Aucune`",
 					"Appelant : `Aucune`"
-				]
+				],
+				"multiple": "Valeurs :",
+				"single": "Valeur :",
+				"too_many": "Trop de valeurs à afficher !",
+				"total": "Total :",
+				"average": "Moyenne :",
+				"request": "Je ne comprends pas votre demande...\nVeuillez consulter la syntaxe avec `/help {{0}}` !",
+				"limited": [
+					"Désolé, mais je préfère limiter cela à {{0}} lancers !",
+					"Pourquoi diable en voudriez-vous autant ?",
+					"Total des lancers donnés : {{1}}..."
+				],
+				"success": "J'ai noté vos résultats ci-dessous :",
+				"title": "**Résultats de {{0}}**"
 			}
 		},
 

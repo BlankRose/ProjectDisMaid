@@ -12,6 +12,15 @@
 		"wip": "Comming Soon..."
 	},
 
+	"predicates":
+	{
+		"dm": "You must be in DMs to execute this command!",
+		"server": "You must be in a guild to execute this command!",
+		"user": "The given user cannot be found! Are you sure he's part of this guild?..",
+		"permission_user": "You don't has the sufficient permissions to execute this command!",
+		"permission_maid": "I don't has the sufficient permissions to perform this task!"
+	},
+
 	"categories":
 	{
 		"admin": {
@@ -82,7 +91,14 @@
 				"permissions": [
 					"Application: `Moderate Members`",
 					"Caller: `Moderate Members`"
-				]
+				],
+				"maid": "Why do you want me silenced so badly? ;w;'",
+				"self": "I don't think I can mute you.. But why would you mute yourself?",
+				"time": "Couldn't parse the given time: {{0}}!",
+				"fail": "I couldn't mute the targetted user!",
+				"success": "User {{0}} has been successfully muted until {{1}}!",
+				"dm_base": "You has been muted in {{0}} until {{1}}",
+				"dm_reason": " for the following reason:\n{{0}}"
 			},
 			"unmute": {
 				"syntax": "<User> [DM]",
@@ -102,7 +118,10 @@
 				"permissions": [
 					"Application: `Moderate Members`",
 					"Caller: `Moderate Members`"
-				]
+				],
+				"fail": "I couldn't unmute the targetted user!",
+				"success": "User {{0}} has been successfully unmuted!",
+				"dm": "Your timeout has been lifted in {{0}}!"
 			}
 		},
 
@@ -262,6 +281,17 @@
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
+				],
+				"first": [
+					"Hai sweetheart~",
+					"Hello there~",
+					"Hoi!"
+				],
+				"second": [
+					"(^owo^)s *Meow.*",
+					"How are you?",
+					"Would you like some cookies?",
+					"Have you seen my cat? I can't find it anywhere."
 				]
 			},
 			"random": {
@@ -288,7 +318,20 @@
 				"permissions": [
 					"Application: `None`",
 					"Caller: `None`"
-				]
+				],
+				"multiple": "Values:",
+				"single": "Value:",
+				"too_many": "Too many values to display!",
+				"total": "Total:",
+				"average": "Average:",
+				"request": "I cant understand your request..\nPlease look up the syntax with `/help {{0}}`!",
+				"limited": [
+					"Sorry but I'd rather limit this to {{0}} rolls!",
+					"Why the heck you want that many anyway?",
+					"Total rolls given: {{1}}.."
+				],
+				"success": "I've noted down your results below:",
+				"title": "**{{0}}'s Roll Results**"
 			}
 		},
 

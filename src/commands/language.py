@@ -5,18 +5,20 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 18:42:25 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 18:08:59 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core import database, locals
+from src.core import \
+	localizations as lz, \
+	database as db
 import discord
 
 class Language:
 
 	LOC_BASE = "command.general.language"
 	COMMAND = "language"
-	ALIAS = ["lang"]
+	ALIAS = ["localization", "local", "lang"]
 	ICON = "🌐"
 
 	#==-----==#
@@ -26,11 +28,11 @@ class Language:
 		async def autocomplete(_: discord.Interaction, current: str):
 			return [
 				discord.app_commands.Choice(name = entry, value = entry)
-				for entry in locals.available if current.lower() in entry.lower()
+				for entry in lz.available if current.lower() in entry.lower()
 			]
 
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + locals.get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
@@ -40,9 +42,9 @@ class Language:
 			@discord.app_commands.autocomplete(language = autocomplete)
 			async def run(ctx: discord.Interaction, language: str):
 
-				if language.lower() not in locals.available:
+				if language.lower() not in lz.available:
 					await ctx.response.send_message("Sorry, this language is unavailable :(", ephemeral = True)
 					return
 
-				database.store(-1, ctx.user.id, language, 'lang')
-				await ctx.response.send_message(locals.get_local(language, f"{Language.LOC_BASE}.success"), ephemeral = True)
+				db.store(-1, ctx.user.id, language, 'lang')
+				await ctx.response.send_message(lz.get_local(language, f"{Language.LOC_BASE}.success"), ephemeral = True)

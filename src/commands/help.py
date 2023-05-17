@@ -5,15 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 22:09:01 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 17:11:21 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
-from src.utils import construct
-from src.core import database
-from src.commands import *
 import logging as logs
+from src.commands import *
+from src.utils import construct
+import src.core.localizations as lz
 import discord
 
 class Help:
@@ -32,8 +31,8 @@ class Help:
 
 		options: list = [
 			discord.SelectOption(
-				label = get_local(lang, f"{category_details[x]().LOC_BASE}.title"),
-				description = get_local(lang, f"{category_details[x]().LOC_BASE}.description"),
+				label = lz.get_local(lang, f"{category_details[x]().LOC_BASE}.title"),
+				description = lz.get_local(lang, f"{category_details[x]().LOC_BASE}.description"),
 				emoji = category_details[x]().ICON,
 				value = x)
 			for x in categories]
@@ -45,7 +44,7 @@ class Help:
 				self.origin = ctx
 				self.embed = base
 
-			@discord.ui.select(options = options, placeholder = get_local(lang, Help.LOC_BASE + '.placeholder'))
+			@discord.ui.select(options = options, placeholder = lz.get_local(lang, Help.LOC_BASE + '.placeholder'))
 			async def callback(self, ctx: discord.Interaction, select: discord.ui.Select):
 				from src.commands import sub_entries
 
@@ -55,27 +54,27 @@ class Help:
 
 				for i in target:
 					entry = target[i]()
-					syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
-					short = get_local(lang, f"{entry.LOC_BASE}.short")
+					syntax = lz.get_local(lang, f"{entry.LOC_BASE}.syntax")
+					short = lz.get_local(lang, f"{entry.LOC_BASE}.short")
 
 					self.embed.add_field(
 						name = f"/{entry.COMMAND} {syntax}",
 						value = f"{entry.ICON} {short}",
 						inline = False )
 
-				await self.origin.edit_original_response(content = get_local(lang, Help.LOC_BASE + '.selector_switch'), embed = self.embed)
+				await self.origin.edit_original_response(content = lz.get_local(lang, Help.LOC_BASE + '.selector_switch'), embed = self.embed)
 				await ctx.response.send_message("Updated!", delete_after = 0)
 
 			async def on_timeout(self) -> None:
 				try:
 					res = (await self.origin.original_response())
-					await res.edit(content = f"⚠️ *{get_local(lang, 'system.timeout')}*\n{res.content}", view = None)
+					await res.edit(content = f"⚠️ *{lz.get_local(lang, 'system.timeout')}*\n{res.content}", view = None)
 				except Exception as err:
 					logs.error(err)
 				return await super().on_timeout()
 
 			async def on_error(self, ctx: discord.Interaction, error: Exception, item, /) -> None:
-				await ctx.response(get_local(lang, 'system.error'))
+				await ctx.response(lz.get_local(lang, 'system.error'))
 				return await super().on_error(ctx, error, item)
 
 		return Selector(ctx, base, timeout = timeout)
@@ -91,7 +90,7 @@ class Help:
 			]
 
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
@@ -102,13 +101,13 @@ class Help:
 			async def run(ctx: discord.Interaction, command: str = None):
 
 				# Retrieve User Language
-				lang = database.fetch(-1, ctx.user.id).values[0]
+				lang = lz.get_userlang(ctx.user.id)
 
 				# Base Embed Structure
 				embed = discord.embeds.Embed()
 				embed.color = 0xb842ae
-				embed.title = get_local(lang, Help.LOC_BASE + '.title')
-				embed.set_footer(text = get_local(lang, Help.LOC_BASE + '.footer'), icon_url = "https://i.imgur.com/w1BwX4h.png")
+				embed.title = lz.get_local(lang, Help.LOC_BASE + '.title')
+				embed.set_footer(text = lz.get_local(lang, Help.LOC_BASE + '.footer'), icon_url = "https://i.imgur.com/w1BwX4h.png")
 
 				# Default Behavior
 				if not command:
@@ -116,8 +115,8 @@ class Help:
 					for i in entries:
 						if i in non_categorized:
 							entry = entries[i]()
-							syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
-							short = get_local(lang, f"{entry.LOC_BASE}.short")
+							syntax = lz.get_local(lang, f"{entry.LOC_BASE}.syntax")
+							short = lz.get_local(lang, f"{entry.LOC_BASE}.short")
 
 							embed.add_field(
 								name = f"/{entry.COMMAND} {syntax}",
@@ -126,31 +125,31 @@ class Help:
 
 					embed.add_field(
 						name = "",
-						value = get_local(lang, Help.LOC_BASE + '.selector_notice'),
+						value = lz.get_local(lang, Help.LOC_BASE + '.selector_notice'),
 						inline = False )
 
 					from src.core.client import Client
-					embed.description = get_local(lang, 'system.description')
+					embed.description = lz.get_local(lang, 'system.description')
 
 					file_logo = discord.File("assets/logo.png", filename = "logo.png")
 					embed.set_thumbnail(url="attachment://logo.png")
-					await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.listed'), file = file_logo, embed = embed, ephemeral = True, view = Help.new_selector(ctx, embed, lang))
+					await ctx.response.send_message(lz.get_local(lang, Help.LOC_BASE + '.listed'), file = file_logo, embed = embed, ephemeral = True, view = Help.new_selector(ctx, embed, lang))
 
 				# Search and Display Command
 				else:
 
 					if command in entries:
 						entry: Any = entries[command]()
-						syntax = get_local(lang, f"{entry.LOC_BASE}.syntax")
+						syntax = lz.get_local(lang, f"{entry.LOC_BASE}.syntax")
 						description = construct.full_description(lang, entry.LOC_BASE)
 
 						embed.description = f"{entry.ICON} __**/{entry.COMMAND} {syntax}:**__"
 						if entry.ALIAS and len(entry.ALIAS) > 0:
-							embed.description += "\n" + get_local(lang, 'command.base.aliases')
+							embed.description += "\n" + lz.get_local(lang, 'command.base.aliases')
 							for i in entry.ALIAS:
 								embed.description += f" `{i}`"
 						if description and len(description) > 0:
 							embed.description += f"\n{description}"
-						await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.found'), embed = embed, ephemeral = True)
+						await ctx.response.send_message(lz.get_local(lang, Help.LOC_BASE + '.found'), embed = embed, ephemeral = True)
 					else:
-						await ctx.response.send_message(get_local(lang, Help.LOC_BASE + '.notfound'), ephemeral = True)
+						await ctx.response.send_message(lz.get_local(lang, Help.LOC_BASE + '.notfound'), ephemeral = True)

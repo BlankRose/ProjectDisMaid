@@ -5,12 +5,13 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun May 14 17:39:54 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 16:19:56 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
+import json
 from src.utils import construct, predicates
+import src.core.localizations as lz
 import discord
 
 class Embed_Edit:
@@ -45,9 +46,9 @@ class Embed_Edit:
 
 		sub_cmds = [
 			"add_field", "add_footer", "add_author",
-			"set_body", "set_field", "set_thumbnail", "set_title", "set_description", "set_color",
+			"set_body", "set_field", "set_thumbnail", "set_title", "set_description", "set_color", "set_inline",
 			"del_field", "del_title", "del_description", "del_footer", "del_author", "del_all_fields",
-			"get_color"
+			"get_color", "get_raw"
 		]
 
 		async def autocomplete(ctx: discord.Interaction, current: str):
@@ -57,7 +58,7 @@ class Embed_Edit:
 			]
 
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
@@ -76,6 +77,8 @@ class Embed_Edit:
 			async def run(ctx: discord.Interaction, message_id: str, sub_command: str,
 				channel: discord.TextChannel = None, title: str = None, description: str = None, image_url: str = None, inline: bool = False, index: int = None):
 
+				lang = lz.get_userlang(ctx.user.id)
+
 				# ############################## #
 				#                                #
 				#        VALIDITY CHECKER        #
@@ -86,9 +89,9 @@ class Embed_Edit:
 					channel = ctx.channel
 				sub_command = sub_command.lower()
 
-				if await predicates.from_guild(ctx, False):
-					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True)): return
-					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True)): return
+				if await predicates.from_guild(ctx, lang, False):
+					if not await predicates.user_permissions(ctx, ctx.user, discord.Permissions(manage_messages = True), lang): return
+					if not await predicates.app_permissions(ctx, discord.Permissions(send_messages = True), lang): return
 
 				if not message_id.isdigit():
 					return await ctx.response.send_message("The message ID doesn't actually looks like an ID.. It should be composed for digits!", ephemeral = True)
@@ -108,6 +111,11 @@ class Embed_Edit:
 
 				total = self.count_fields(embed)
 				len_current = self.count_character(embed)
+
+				if title:
+					title = title.replace('\\n', '\n')
+				if description:
+					description = description.replace('\\n', '\n')
 
 				match sub_command:
 
@@ -225,6 +233,18 @@ class Embed_Edit:
 							return await construct.reply(ctx, "The given color is invalid!")
 						embed.color = color
 
+					case "set_inline":
+						if not index:
+							return await construct.reply(ctx, "Please specify an index!")
+						if not (index > 0 and index <= total):
+							return await construct.reply(ctx, "There is no fields at the specified index!")
+						embed.set_field_at(
+							index = index - 1,
+							name = embed.fields[index - 1].name,
+							value = embed.fields[index - 1].value,
+							inline = inline
+						)
+
 				# ############################## #
 				#                                #
 				#      DESTRUCTIVE COMMANDS      #
@@ -234,7 +254,7 @@ class Embed_Edit:
 					case "del_field":
 						if not index:
 							return await construct.reply(ctx, "Please specify an index!")
-						if index > 0 and index <= total:
+						if not (index > 0 and index <= total):
 							return await construct.reply(ctx, "There is no fields at the specified index!")
 						embed.remove_field(index - 1)
 
@@ -281,6 +301,10 @@ class Embed_Edit:
 						if not embed.color:
 							return await construct.reply(ctx, "Target embed's color is not defined!")
 						return await construct.reply(ctx, f"Target embed's color: 0x{hex(embed.color.value)[2:].upper()}")
+
+					case "get_raw":
+						reply: str = f"Here's the raw embed:\n```json\n{json.dumps(embed.to_dict(), indent = 2)}```"
+						return await construct.reply(ctx, reply)
 
 				# ############################## #
 				#                                #

@@ -5,13 +5,12 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 21:26:42 CEST 2023     #
+#       //\   /         Last Updated: Wed May 17 17:59:52 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
-from src.core.locals import get_local
 import numpy as np
-import logging
+import src.core.localizations as lz
 import discord
 
 class Random:
@@ -61,11 +60,9 @@ class Random:
 				min = tmp
 			ret: tuple[int, int, int] = (int(rolls), int(min), int(max))
 		except:
-			logging.debug("Invalid Arguments...")
 			return (-1, 0, 0)
 
 		if ret[2] > Random.MAX_VALUE or ret[1] < Random.MIN_VALUE:
-			logging.debug("Beyong MIN and MAX limits!")
 			return (-1, 0, 0)
 		return ret
 
@@ -77,16 +74,17 @@ class Random:
 
 	#==-----==#
 
-	def displayRoll(self, values: np.ndarray) -> str:
+	def displayRoll(self, values: np.ndarray, lang: str) -> str:
 		""" Converts a list of values into a displayable string """
 
 		display = str("")
 		if values.size <= 50:
 
 			if values.size > 1:
-				display += "Values: "
+				display += lz.get_local(lang, self.LOC_BASE + '.multiple')
 			else:
-				display += "Value: "
+				display += lz.get_local(lang, self.LOC_BASE + '.single')
+			display += ' '
 
 			first = bool(True)
 			for i in values:
@@ -96,21 +94,21 @@ class Random:
 				else:
 					display += ", " + str(i)
 				if len(display) > 200:
-					display = "Too many values to display!"
+					display = lz.get_local(lang, self.LOC_BASE + '.too_many')
 					break
 		else:
-			display = "Too many values to display!"
+			display = lz.get_local(lang, self.LOC_BASE + '.too_many')
 
 		if values.size > 1:
-			display += "\nTotal:   " + str(np.sum(values))
-			display += "\nAverage: " + str(np.average(values))
+			display += f"\n{lz.get_local(lang, self.LOC_BASE + '.total')} " + str(np.sum(values))
+			display += f"\n{lz.get_local(lang, self.LOC_BASE + '.average')} " + str(round(np.average(values), 2))
 		return display
 
 	#==-----==#
 
 	def register(self, cmd: discord.app_commands.CommandTree, entries: dict) -> None:
 		registry = self.ALIAS + [self.COMMAND]
-		short = self.ICON + " " + get_local("en-us", f"{self.LOC_BASE}.short")
+		short = self.ICON + " " + lz.get_local(lz.FALLBACK, f"{self.LOC_BASE}.short")
 		for i in registry:
 
 	#==-----==#
@@ -120,6 +118,7 @@ class Random:
 			async def run(ctx: discord.Interaction, arguments: str = None):
 
 				await ctx.response.defer(ephemeral = True, thinking = True)
+				lang = lz.get_userlang(ctx.user.id)
 
 				total_rolls: int = 0
 				args: list[str] = []
@@ -130,15 +129,15 @@ class Random:
 					for i, v in enumerate(args):
 						res[i] = self.parseArgs(v)
 						if res[i][0] < 0:
-							return await ctx.followup.send(f"I cant understand your request..\nPlease look up the syntax with `/help {self.COMMAND}`!")
+							return await ctx.followup.send(lz.get_local(lang, self.LOC_BASE + '.request', self.COMMAND))
 						total_rolls += res[i][0]
 
 				if total_rolls > Random.MAX_ROLLS:
-					return await ctx.followup.send(f"Sorry but I'd rather limit this to {Random.MAX_ROLLS} rolls!\nWhy the heck you want that many anyway?\nTotal rolls given: {total_rolls}..")
+					return await ctx.followup.send(lz.get_local(lang, self.LOC_BASE + '.limited', Random.MAX_ROLLS, total_rolls))
 
 				embed = discord.embeds.Embed()
 				embed.color = 0xEB9234
-				embed.title = f"**{ctx.user.display_name}'s Roll Results**"
+				embed.title = lz.get_local(lang, self.LOC_BASE + '.title', ctx.user.display_name)
 				file = discord.File("assets/dices.png", filename="dices.png")
 				embed.set_thumbnail(url="attachment://dices.png")
 
@@ -146,8 +145,8 @@ class Random:
 					for i, v in enumerate(res):
 						embed.add_field(
 							name = args[i],
-							value = self.displayRoll(self.newRoll(v)),
+							value = self.displayRoll(self.newRoll(v), lang),
 							inline = True )
 				else:
-					embed.description = self.displayRoll(self.newRoll((1, 1, 6)))
-				await ctx.followup.send("I've noted down your results below:", file = file, embed = embed)
+					embed.description = self.displayRoll(self.newRoll((1, 1, 6)), lang)
+				await ctx.followup.send(lz.get_local(lang, self.LOC_BASE + '.success'), file = file, embed = embed)

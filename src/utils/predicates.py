@@ -5,55 +5,56 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 22:55:59 CET 2023      #
+#       //\   /         Last Updated: Wed May 17 14:07:02 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import logging
 import discord
 
+from src.core.localizations import get_local
 from src.utils.construct import reply
 
-async def from_guild(ctx: discord.Interaction, msg: bool = True) -> bool:
+async def from_guild(ctx: discord.Interaction, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks wether the interaction is made in a guild
 	"""
 	if not ctx.guild:
-		if msg: await reply(ctx, "You must be in a guild to execute this command!")
+		if msg: await reply(ctx, get_local(lang, 'predicates.server'))
 		return False
 	return True
 
 	#==-----==#
 
-async def from_dm(ctx: discord.Interaction, msg: bool = True) -> bool:
+async def from_dm(ctx: discord.Interaction, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks wether the interaction is made in DMs
 	"""
 	if ctx.guild:
-		if msg: await reply(ctx, "You must be in DMs to execute this command!")
+		if msg: await reply(ctx, get_local(lang, 'predicates.dm'))
 		return False
 	return True
 
 	#==-----==#
 
-async def is_member(ctx: discord.Interaction, user: discord.User, msg: bool = True) -> bool:
+async def is_member(ctx: discord.Interaction, user: discord.User, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks wether the user is in the guild
 	"""
 	if not user:
 		logging.warning("Trying to predicate if member on non-existant user! BLOCKED")
 		return False
-	if not await from_guild(ctx, False):
+	if not await from_guild(ctx, lang, False):
 		logging.warning("Trying to predicate if member out of guilds! IGNORED")
 		return True
 	if not ctx.guild.get_member(user.id):
-		if msg: await reply(ctx, "The given user cannot be found! Are you sure he's part of this guild?..")
+		if msg: await reply(ctx, get_local(lang, 'predicates.user'))
 		return False
 	return True
 
 	#==-----==#
 
-async def member_permissions(ctx: discord.Interaction, user: discord.Member, perms: discord.Permissions, msg: bool = True) -> bool:
+async def member_permissions(ctx: discord.Interaction, user: discord.Member, perms: discord.Permissions, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks if the member has the sufficient permissions (Shall be used in guilds!)
 	"""
@@ -62,7 +63,7 @@ async def member_permissions(ctx: discord.Interaction, user: discord.Member, per
 		return False
 
 	async def e() -> bool:
-		if msg: await reply(ctx, "You don't has the sufficient permissions to execute this command!")
+		if msg: await reply(ctx, get_local(lang, 'predicates.permission_user'))
 		return False
 
 	cmp = user.guild_permissions
@@ -116,28 +117,28 @@ async def member_permissions(ctx: discord.Interaction, user: discord.Member, per
 
 	#==-----==#
 
-async def user_permissions(ctx: discord.Interaction, user: discord.User, perms: discord.Permissions, msg: bool = True) -> bool:
+async def user_permissions(ctx: discord.Interaction, user: discord.User, perms: discord.Permissions, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks if the user has the sufficient permissions (Shall be used in guilds!)
 	"""
 	if not user:
 		logging.warning("Trying to predicate permissions on non-existant user! BLOCKED")
 		return False
-	if not await from_guild(ctx, False):
+	if not await from_guild(ctx, lang, False):
 		logging.warning("Trying to predicate permissions out of guilds! IGNORED")
 		return True
-	return await member_permissions(ctx, ctx.guild.get_member(user.id), perms, msg)
+	return await member_permissions(ctx, ctx.guild.get_member(user.id), perms, lang, msg)
 
 	#==-----==#
 
-async def app_permissions(ctx: discord.Interaction, perms: discord.Permissions, msg: bool = True) -> bool:
+async def app_permissions(ctx: discord.Interaction, perms: discord.Permissions, lang: str = 'en-us', msg: bool = True) -> bool:
 	"""
 	Checks if the application has the sufficient permissions (Shall be used in guilds!)
 	"""
-	if not await from_guild(ctx, False):
+	if not await from_guild(ctx, lang, False):
 		logging.warning("Trying to predicate permissions out of guilds! IGNORED")
 		return True
-	if not await member_permissions(ctx, ctx.guild.get_member(ctx.client.user.id), perms, False):
-		if msg: await reply(ctx, "I don't has the sufficient permissions to perform this task!")
+	if not await member_permissions(ctx, ctx.guild.get_member(ctx.client.user.id), perms, lang, False):
+		if msg: await reply(ctx, get_local(lang, 'predicates.permission_maid'))
 		return False
 	return True
