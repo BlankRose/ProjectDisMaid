@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 21:29:40 CET 2023      #
+#       //\   /         Last Updated: Thu May 18 18:48:37 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -78,7 +78,8 @@ class Logs:
 
 	#==-----==#
 
-	def danger(self, msg: str):
+	@staticmethod
+	def danger(msg: str):
 		"""
 		Uses logging to send a critical log, using `msg` as its output then abort the programm
 		

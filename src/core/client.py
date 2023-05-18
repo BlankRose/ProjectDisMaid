@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu May 18 14:10:14 CEST 2023     #
+#       //\   /         Last Updated: Thu May 18 20:32:49 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -92,14 +92,31 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 			verify=data,
 			important=(
 				("token", str),
-				("localizations", str),
-				("database", str)),
+				("local", bool),
+				("database-pass", str),
+				("database-name", str),
+				("localizations", str)),
 			options=(
 				("maxLogs", int, 5),
+				("database-user", str, "root"),
+				("database-ip", str, "127.0.0.1"),
+				("database-port", int, 3306),
+				("database-retry", int, 5),
 				("autoSave", bool, True),
 				("autoSave-time", int, 600))
-		)):
-		logs.Logs.danger("ABORTING..")
+			)):
+		exit(1)
+
+	if not data["local"]:
+		if not database.connect(
+				config.data["database-user"],
+				config.data["database-pass"],
+				config.data["database-ip"],
+				config.data["database-port"],
+				config.data["database-name"],
+				config.data["database-retry"]):
+			log.error("Failed to connect to database!")
+			exit(2)
 
 	database.load()
 	lz.load_locals(data["localizations"])
@@ -123,6 +140,7 @@ def run(token: str) -> None:
 
 	try:
 		bot.cmds = cmds
-		bot.run(token, log_handler = None)
+		bot.run(token)
 	except Exception as err:
-		log.error(f"The bot couldnt be started! Internet issues or Invalid Token?\nError: {err}")
+		print(f"Error: {err}")
+		log.error(f"The bot couldnt be started! Internet issues or Invalid Token? Error: {err}")

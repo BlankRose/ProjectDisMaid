@@ -5,15 +5,17 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 17:15:31 CEST 2023     #
+#       //\   /         Last Updated: Thu May 18 20:29:50 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from typing import Any
 from pathlib import Path
+from src.core.configs import Config
+import mysql.connector as sql
 import pandas as pd
 import logging
-import os
+import os, time
 
 class Storage:
 
@@ -37,6 +39,7 @@ class Storage:
 
 	#==-----==#
 
+	conn: sql.MySQLConnection = None
 	folder: str = "data"
 
 	server_save = ['id']
@@ -49,6 +52,46 @@ class Storage:
 
 	data: dict[int, pd.DataFrame] = {}
 	reserved: dict[int, str] = {-1: 'shared'}
+
+	def __init__(self, *_) -> None:
+		raise NotImplementedError
+
+	#==-----==#
+
+def connect(user: str, password: str, host: str, port: str, name: str, retries: int) -> bool:
+	"""
+	Connect to the MySQL database using the various
+	arguments provided and returns False if all tries failed
+	"""
+
+	for i in range(retries + 1):
+		if i != 0:
+			time.sleep(5)
+		try:
+			Storage.conn = sql.MySQLConnection(
+				user = user,
+				password = password,
+				database = name,
+				host = host,
+				port = port)
+			if Storage.conn.is_connected():
+				return True
+		except:
+			continue
+	Storage.conn = None
+	return False
+
+	#==-----==#
+
+def disconnect() -> None:
+	"""
+	Disconnect the connection if any exists
+	"""
+
+	save()
+	if Storage.conn and Storage.conn.is_connected():
+		Storage.conn.close()
+	Storage.conn = None
 
 	#==-----==#
 
@@ -74,21 +117,24 @@ def save(folder: str = Storage.folder) -> None:
 	Saves the current data to the target file and folder
 	"""
 
-	if len(Storage.data):
+	if Config.data['local']:
+		if len(Storage.data):
 
-		fold = Path(folder)
-		if not fold.exists():
-			fold.mkdir()
+			fold = Path(folder)
+			if not fold.exists():
+				fold.mkdir()
 
-		for i, v in Storage.data.items():
-			if i in Storage.reserved.keys():
-				path = os.path.join(folder, Storage.reserved[i])
-			else:
-				path = os.path.join(folder, str(i))
-			v.to_csv(path)
+			for i, v in Storage.data.items():
+				if i in Storage.reserved.keys():
+					path = os.path.join(folder, Storage.reserved[i])
+				else:
+					path = os.path.join(folder, str(i))
+				v.to_csv(path)
+		else:
+			logging.error("SAVE failed! Cannot save data base since none exists!")
 
-	else:
-		logging.error("SAVE failed! Cannot save data base since none exists!")
+	else: # Server
+		pass
 
 	#==-----==#
 
@@ -97,25 +143,32 @@ def load(folder: str = Storage.folder) -> None:
 	Loads the data from a target file and folder
 	"""
 
-	fold = Path(folder)
-	if not fold.exists():
-		fold.mkdir()
-	Storage.folder = folder
+	if Config.data['local']:
+		fold = Path(folder)
+		if not fold.exists():
+			fold.mkdir()
+		Storage.folder = folder
 
-	for i in fold.iterdir():
-		if not i.is_file():
-			continue
+		for i in fold.iterdir():
+			if not i.is_file():
+				continue
 
-		key = None
-		for k, v in Storage.reserved.items():
-			if i.name == v: key = k
+			key = None
+			for k, v in Storage.reserved.items():
+				if i.name == v: key = k
 
-		try:
-			if key is None:
-				key = int(i.name)
-			Storage.data[key] = pd.read_csv(i, index_col = 'id')
-		except:
-			logging.error(f"LOAD failed for file: {i}! Corrupt file?")
+			try:
+				if key is None:
+					key = int(i.name)
+				Storage.data[key] = pd.read_csv(i, index_col = 'id')
+			except:
+				logging.error(f"LOAD failed for file: {i}! Corrupt file?")
+
+	else: # Server
+		if not Storage.conn:
+			logging.error(f"LOAD failed since there's no connections yet!")
+			return
+		pd.read_sql_table('shared', Storage.conn)
 
 	if Storage.data.get(-1, None) is None:
 		create_savestate(-1)

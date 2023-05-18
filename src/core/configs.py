@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Mar 11 21:29:45 CET 2023      #
+#       //\   /         Last Updated: Thu May 18 18:50:23 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -93,10 +93,14 @@ class Config:
 				if not isinstance(verify[i[0]], i[1]):
 					raise TypeError
 			except TypeError:
-				logging.warning(f"Expected an {i[1]} for IMPORTANT config: {i[0]}!")
+				msg = f"Expected {i[1]} for IMPORTANT config: {i[0]}!"
+				print(msg)
+				logging.warning(msg)
 				return False
 			except:
-				logging.warning(f"Missing IMPORTANT config: {i[0]}! ABORTING!")
+				msg = f"Missing IMPORTANT config: {i[0]}! ABORTING!"
+				print(msg)
+				logging.warning(msg)
 				return False
 
 		for i in options:
