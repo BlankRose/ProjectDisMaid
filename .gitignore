@@ -1,0 +1,13 @@
+# SECURITY PURPOSE
+/data
+/logs
+
+# NON TRIVIAL FOLDERS
+__pycache__
+[.v]env
+env
+
+# USELESS FILES
+.DS_Store
+.vscode
+.header
