@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Wed May 17 14:13:13 CEST 2023     #
+#       //\   /         Last Updated: Thu May 18 14:10:14 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -54,17 +54,17 @@ class Client(discord.Client):
 		log.info("The client is ready for usage!")
 
 	async def on_disconnect(self):
-		print("🎑\033[1;33m The maid has took a break.. \033[0m")
+		print("👒\033[1;33m The maid has took a break.. \033[0m")
 		log.info("The connection has been lost! Retrying..")
 
 	async def on_connect(self):
-		print("👒\033[1;32m The maid has came online! \033[0m")
+		print("🌍\033[1;32m The maid has came online! \033[0m")
 		log.info("The connection has been etablished!")
 
 	#==-----==#
 
 	async def close(self):
-		print("🎑\033[1;31m The maid has left the town.. \033[0m")
+		print("\033[2K🌙\033[1;31m The maid has left the town.. \033[0m")
 		log.info("The connection has been terminated!")
 		database.save()
 		await super().close()
@@ -81,20 +81,28 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 					format="[%(asctime)s] %(levelname)s >> %(message)s")
 	logs.Logs.folder = info.folder
 	logs.Logs.file = info.file
-	log.debug("Logs setup complete!..")
-	log.debug(f"Running under python {sys.version}")
+	log.info("Logs setup complete!..")
+	log.info(f"Running under python {sys.version}")
 
 	config = configs.Config()
 	config.fetch(cwd, config_file)
 	data = config.data
 	configs.Config.data = config.data
-	if not (config.check(verify=data,
-						important=(("token", str),),
-						options=(("maxLogs", int, 5),))):
+	if not (config.check(
+			verify=data,
+			important=(
+				("token", str),
+				("localizations", str),
+				("database", str)),
+			options=(
+				("maxLogs", int, 5),
+				("autoSave", bool, True),
+				("autoSave-time", int, 600))
+		)):
 		logs.Logs.danger("ABORTING..")
 
 	database.load()
-	lz.load_locals("lang")
+	lz.load_locals(data["localizations"])
 
 	info.clean(data["maxLogs"])
 	return (data["token"])
@@ -115,6 +123,6 @@ def run(token: str) -> None:
 
 	try:
 		bot.cmds = cmds
-		bot.run(token)
+		bot.run(token, log_handler = None)
 	except Exception as err:
 		log.error(f"The bot couldnt be started! Internet issues or Invalid Token?\nError: {err}")
