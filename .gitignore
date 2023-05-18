@@ -1,6 +1,5 @@
 # SECURITY PURPOSE
-/data
-/logs
+/docker
 
 # NON TRIVIAL FOLDERS
 __pycache__

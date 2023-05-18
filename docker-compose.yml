@@ -1,0 +1,67 @@
+# ********************************************************************* #
+#          .-.                                                          #
+#    __   /   \   __                                                    #
+#   (  `'.\   /.'`  )   DisMaid - docker-compose.yaml                   #
+#    '-._.(;;;)._.-'                                                    #
+#    .-'  ,`"`,  '-.                                                    #
+#   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
+#       //\   /         Last Updated: Thu May 18 15:13:18 CEST 2023     #
+#      ||  '-'                                                          #
+# ********************************************************************* #
+
+version: '3'
+
+###  SERVICES  ###
+# The core functionalities
+
+services:
+
+  database:
+    image: mysql:8.0
+    container_name: database
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - internal
+    ports:
+      - 3306:3306
+
+  application:
+    image: python:3.11-bullseye
+    container_name: dismaid
+    build: ./app
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - logging:/app/logs
+    depends_on:
+      - database
+
+###  NETWORKS  ###
+# Used as connection between services
+
+networks:
+  internal:
+
+###  VOLUMES  ###
+# Used as storage for services
+
+volumes:
+
+  database:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./docker/data
+      o: bind
+
+  logging:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./docker/logs
+      o: bind
