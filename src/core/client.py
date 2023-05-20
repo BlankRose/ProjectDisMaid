@@ -5,19 +5,23 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu May 18 20:32:49 CEST 2023     #
+#       //\   /         Last Updated: Sat May 20 17:49:41 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import src.core.localizations as lz
 from src.core import logs, configs, database
 from src import commands, events
+
+from typing import NoReturn
 from pathlib import Path
-import sys
+import sys, signal as sig
 
 import discord.app_commands as app
 import logging as log
 import discord
+
+	#==-----==#
 
 class Client(discord.Client):
 
@@ -102,10 +106,12 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 				("database-ip", str, "127.0.0.1"),
 				("database-port", int, 3306),
 				("database-retry", int, 5),
+				("database-time", int, 5),
 				("autoSave", bool, True),
 				("autoSave-time", int, 600))
 			)):
 		exit(1)
+	info.clean(data["maxLogs"])
 
 	if not data["local"]:
 		if not database.connect(
@@ -114,14 +120,13 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 				config.data["database-ip"],
 				config.data["database-port"],
 				config.data["database-name"],
-				config.data["database-retry"]):
+				config.data["database-retry"],
+				config.data["database-time"]):
 			log.error("Failed to connect to database!")
 			exit(2)
-
 	database.load()
 	lz.load_locals(data["localizations"])
 
-	info.clean(data["maxLogs"])
 	return (data["token"])
 
 	#==-----==#

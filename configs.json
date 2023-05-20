@@ -1,4 +1,12 @@
 {
-	"token": "InsertTokenHere",
-	"maxLogs": 5
+	"token": "token-here",
+	"maxLogs": 5,
+
+	"database-ip": "",
+	"database-pass": "",
+	"database-name": "",
+	"autoSave": true,
+	"autoSave-time": 600,
+
+	"localizations": "lang"
 }

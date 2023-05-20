@@ -5,16 +5,16 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Thu May 18 20:29:50 CEST 2023     #
+#       //\   /         Last Updated: Sat May 20 18:07:07 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from typing import Any
 from pathlib import Path
 from src.core.configs import Config
-import mysql.connector as sql
+import sqlalchemy as sql
 import pandas as pd
-import logging
+import logging as logs
 import os, time
 
 class Storage:
@@ -39,7 +39,7 @@ class Storage:
 
 	#==-----==#
 
-	conn: sql.MySQLConnection = None
+	engine: sql.engine.Engine = None
 	folder: str = "data"
 
 	server_save = ['id']
@@ -58,40 +58,62 @@ class Storage:
 
 	#==-----==#
 
-def connect(user: str, password: str, host: str, port: str, name: str, retries: int) -> bool:
+def connect(user: str, password: str, host: str, port: str, name: str,
+		retries: int, timer: int) -> bool:
 	"""
 	Connect to the MySQL database using the various
 	arguments provided and returns False if all tries failed
 	"""
 
-	for i in range(retries + 1):
-		if i != 0:
-			time.sleep(5)
+	# Definition of a single attempt
+	def new_attempt(i: int) -> bool:
 		try:
-			Storage.conn = sql.MySQLConnection(
-				user = user,
-				password = password,
-				database = name,
-				host = host,
-				port = port)
-			if Storage.conn.is_connected():
+			logs.info(f"Trying to connect to database.. (Attempt {i + 1})")
+			conn = Storage.engine.connect()
+			if conn:
+				conn.close()
 				return True
-		except:
-			continue
-	Storage.conn = None
+		except Exception as err:
+			logs.error(f"Failed to connect: {err}")
+			return False
+		return False
+
+	# Destroys old and Create new engine
+	if Storage.engine:
+		disconnect()
+	Storage.engine = sql.create_engine(
+		f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{name}")
+
+	# Unlimited Retries
+	if retries < 0:
+		i = 0
+		while new_attempt(i) is False:
+			time.sleep(timer)
+			i += 1
+		return True
+
+	# Limited Retries
+	else:
+		for i in range(retries):
+			if i != 0:
+				time.sleep(timer)
+			if new_attempt(i):
+				return True
+
+	Storage.engine = None
 	return False
 
 	#==-----==#
 
 def disconnect() -> None:
 	"""
-	Disconnect the connection if any exists
+	Save the current data and
+	disconnect the connection if any exists
 	"""
 
-	save()
-	if Storage.conn and Storage.conn.is_connected():
-		Storage.conn.close()
-	Storage.conn = None
+	if Storage.engine:
+		save()
+	Storage.engine = None
 
 	#==-----==#
 
@@ -117,24 +139,35 @@ def save(folder: str = Storage.folder) -> None:
 	Saves the current data to the target file and folder
 	"""
 
+	if not len(Storage.data):
+		logs.error("SAVE failed! Cannot save data base since none exists!")
+		return
+
 	if Config.data['local']:
-		if len(Storage.data):
+		fold = Path(folder)
+		if not fold.exists():
+			fold.mkdir()
 
-			fold = Path(folder)
-			if not fold.exists():
-				fold.mkdir()
-
-			for i, v in Storage.data.items():
-				if i in Storage.reserved.keys():
-					path = os.path.join(folder, Storage.reserved[i])
-				else:
-					path = os.path.join(folder, str(i))
-				v.to_csv(path)
-		else:
-			logging.error("SAVE failed! Cannot save data base since none exists!")
+		for i, v in Storage.data.items():
+			path = str(i)
+			if i in Storage.reserved.keys():
+				path = Storage.reserved[i]
+			v.to_csv(os.path.join(folder, path))
 
 	else: # Server
-		pass
+		if not Storage.engine:
+			logs.error(f"SAVE failed since there's no connections yet!")
+			return
+
+		try:
+			with Storage.engine.begin() as conn:
+				for i, v in Storage.data.items():
+					table = str(i)
+					if i in Storage.reserved.keys():
+						table = Storage.reserved[i]
+					v.to_sql(table, conn, if_exists = 'replace')
+		except Exception as err:
+			logs.error(f"SAVE failed due to the following error: {err}")
 
 	#==-----==#
 
@@ -162,13 +195,29 @@ def load(folder: str = Storage.folder) -> None:
 					key = int(i.name)
 				Storage.data[key] = pd.read_csv(i, index_col = 'id')
 			except:
-				logging.error(f"LOAD failed for file: {i}! Corrupt file?")
+				logs.error(f"LOAD failed for file: {i}! Corrupt file?")
 
 	else: # Server
-		if not Storage.conn:
-			logging.error(f"LOAD failed since there's no connections yet!")
+		if not Storage.engine:
+			logs.error(f"LOAD failed since there's no connections yet!")
 			return
-		pd.read_sql_table('shared', Storage.conn)
+
+		meta = sql.MetaData()
+		meta.reflect(Storage.engine)
+		tables = meta.tables.values()
+
+		for i in tables:
+
+			key = None
+			for k, v in Storage.reserved.items():
+				if i.name == v: key = k
+
+			try:
+				if key is None:
+					key = int(i)
+				Storage.data[key] = pd.read_sql_table(i.name, Storage.engine, index_col = 'id')
+			except Exception as err:
+				logs.error(f"LOAD failed for table: {i}! Error: {err}")
 
 	if Storage.data.get(-1, None) is None:
 		create_savestate(-1)
