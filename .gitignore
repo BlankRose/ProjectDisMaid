@@ -1,10 +1,6 @@
 # SECURITY PURPOSE
 /docker
-
-# NON TRIVIAL FOLDERS
-__pycache__
-[.v]env
-env
+.env
 
 # USELESS FILES
 .DS_Store

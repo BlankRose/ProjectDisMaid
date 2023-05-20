@@ -18,20 +18,17 @@ IDC		= $(SILENT) $(NOERR)
 
 ########################################
 
-a: all
-all: build
-
 r: run
 run: folder
-	@docker-compose -f $(TARGET) up
+	@docker-compose -f $(TARGET) up -d
+
+b: build
+build: stop folder
+	@docker-compose -f $(TARGET) up $(FLAGS) -d
 
 s: stop
 stop:
 	@docker-compose -f $(TARGET) down
-
-b: build
-build: stop folder
-	@docker-compose -f $(TARGET) up $(FLAGS)
 
 c: clean
 clean: stop folderclean
@@ -54,7 +51,7 @@ remake: clean build
 
 ########################################
 
-.DEFAULT_GOAL = all
+.DEFAULT_GOAL = run
 .PHONY: \
 	all build run \
 	clean folderclean \

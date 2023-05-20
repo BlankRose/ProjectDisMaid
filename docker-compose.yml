@@ -19,6 +19,7 @@ services:
   database:
     image: mysql:8.0
     container_name: database
+    build: ./sql
     restart: always
     env_file:
       - .env
@@ -26,11 +27,9 @@ services:
       - database:/var/lib/mysql
     networks:
       - internal
-    ports:
-      - 3306:3306
 
   application:
-    image: python:3.11-bullseye
+    image: python:3.11
     container_name: dismaid
     build: ./app
     restart: always
@@ -40,6 +39,7 @@ services:
       - logging:/app/logs
     depends_on:
       - database
+    stop_signal: SIGINT
 
 ###  NETWORKS  ###
 # Used as connection between services
@@ -63,5 +63,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ./docker/logs
+      device: ./docker/log
       o: bind

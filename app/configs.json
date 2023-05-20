@@ -1,1 +1,18 @@
-{ "token": "token-here" }
+{
+	"token": "token here",
+	"maxLogs": 5,
+
+	"local": false,
+	"database-user": "root",
+	"database-pass": "password",
+	"database-ip": "database",
+	"database-port": 3306,
+	"database-name": "dismaid",
+	"database-retry": -1,
+	"database-time": 10,
+
+	"autoSave": true,
+	"autoSave-time": 600,
+
+	"localizations": "lang"
+}

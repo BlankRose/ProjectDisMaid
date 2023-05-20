@@ -15,6 +15,6 @@ RUN apt-get install -y openssh-client git
 WORKDIR /app
 RUN git clone -b dev --single-branch https://github.com/BlankRose/ProjectDisMaid.git . \
 	&& pip3.11 install --no-cache-dir -r requirements.txt
-COPY configs.json .
 
-CMD [ "python3.11", "run.py" ]
+COPY configs.json .
+ENTRYPOINT [ "python3.11", "run.py" ]
