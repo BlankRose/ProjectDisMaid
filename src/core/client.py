@@ -5,17 +5,15 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat May 20 17:49:41 CEST 2023     #
+#       //\   /         Last Updated: Sat May 20 19:45:16 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 import src.core.localizations as lz
 from src.core import logs, configs, database
 from src import commands, events
-
-from typing import NoReturn
 from pathlib import Path
-import sys, signal as sig
+import sys
 
 import discord.app_commands as app
 import logging as log
@@ -97,14 +95,14 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 			important=(
 				("token", str),
 				("local", bool),
-				("database-pass", str),
-				("database-name", str),
+				("database", str),
 				("localizations", str)),
 			options=(
 				("maxLogs", int, 5),
-				("database-user", str, "root"),
 				("database-ip", str, "127.0.0.1"),
 				("database-port", int, 3306),
+				("database-user", str, "root"),
+				("database-pass", str, ""),
 				("database-retry", int, 5),
 				("database-time", int, 5),
 				("autoSave", bool, True),
