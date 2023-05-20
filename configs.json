@@ -2,9 +2,15 @@
 	"token": "token-here",
 	"maxLogs": 5,
 
-	"database-ip": "",
+	"local": true,
+	"database": "data",
+	"database-ip": "127.0.0.1",
+	"database-port": 3306,
+	"database-user": "root",
 	"database-pass": "",
-	"database-name": "",
+	"database-retry": 5,
+	"database-time": 5,
+
 	"autoSave": true,
 	"autoSave-time": 600,
 
