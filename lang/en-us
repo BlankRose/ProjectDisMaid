@@ -332,6 +332,31 @@
 				],
 				"success": "I've noted down your results below:",
 				"title": "**{{0}}'s Roll Results**"
+			},
+			"chess": {
+				"syntax": "<play | move | rules> ...",
+				"short": "Play a game of chess with anyone else",
+				"description": "Play a game of chess with anyone else, in both casual or tournament modes! You can view the rules with `/chess rules`",
+				"arguments": [
+					"`rules` - *Displays rules of chess games*",
+					"ARGS: [Mode]",
+					"`play` - *Starts a game of chess against another player*",
+					"ARGS: <User> [Mode]",
+					"`move` - *Move a piece across the board*",
+					"ARGS: <From> <To>"
+				],
+				"sub_arguments": [
+					"`User` - *User to play against*",
+					"`Mode` - *Can be: 'casual' or 'competitive'*",
+					"`From` - *Chess piece to take from*",
+					"`To` - *Chess piece to move to*"
+				],
+				"unspecified":
+					"`Mode` - *Will defaults to casual mode",
+				"permissions": [
+					"Application: `Send Messages`",
+					"Caller: `None`"
+				]
 			}
 		},
 

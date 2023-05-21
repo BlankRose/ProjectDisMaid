@@ -1,6 +1,6 @@
 # SECURITY PURPOSE
-/data
-/logs
+*.log
+*.db
 
 # NON TRIVIAL FOLDERS
 __pycache__

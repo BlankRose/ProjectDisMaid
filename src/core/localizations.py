@@ -1,11 +1,11 @@
 # ********************************************************************* #
 #          .-.                                                          #
 #    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   DisMaid - locals.py                             #
+#   (  `'.\   /.'`  )   DisMaid - localizations.py                      #
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Wed May 17 13:48:06 CEST 2023     #
+#       //\   /         Last Updated: Sun May 21 19:23:39 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -89,5 +89,5 @@ def get_raw_locals() -> dict[str, Any]:
 
 	#==-----==#
 
-def get_userlang(user_id: int):
+def get_userlang(user_id: int) -> str:
 	return database.fetch(-1, user_id, 'lang')

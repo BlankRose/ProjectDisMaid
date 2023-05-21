@@ -5,14 +5,14 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue May 16 18:53:26 CEST 2023     #
+#       //\   /         Last Updated: Sun May 21 19:54:17 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from src.utils.construct import import_entries
 class Scripts:
 
-	__all__ = ["hello", "random"]
+	__all__ = ["hello", "random", "chess"]
 	entries = import_entries(__all__, "src.commands.scripts")
 
 	LOC_BASE = "categories.scripts"

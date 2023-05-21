@@ -5,53 +5,46 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat May 20 18:07:07 CEST 2023     #
+#       //\   /         Last Updated: Sun May 21 21:49:56 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
 from typing import Any
-from pathlib import Path
-from src.core.configs import Config
-import sqlalchemy as sql
-import pandas as pd
-import logging as logs
-import os, time
+from .configs import Config
+import time, logging as logs
 
-class Storage:
-
-	"""
-	Storage class with the only purpose to store all of the bot's data
-
-	Attributes
-	----------
-	folder: `string`
-		Relative path to the target folder where is located data files
-	server_save: `list[Any]`
-		List of all of the available columns, and used as a comparation
-		when needing to update the internal dataframe
-	shared_save: `list[Any]`
-		List of all available columns for the shared savestates, and used
-		as a comparation when needing to update the internal dataframe
-	data: `dict[int, DataFrame]`
-		Dictionary of dataframes containing the saved datas where
-		key is guilds' id (entry -1 is reserved for shared savestates)
-	"""
+import sqlite3 as sqlLocal
+import mysql.connector as sqlServer
 
 	#==-----==#
 
-	engine: sql.engine.Engine = None
-	folder: str = "data"
+class Storage:
 
-	server_save = ['id']
-	shared_save = ['id', 'lang']
+	conn: sqlLocal.Connection | sqlServer.MySQLConnection = None
 
-	SHARED_DEFAULT = pd.Series(data = {
-		'lang': 'en-us'
-	})
-	SERVER_DEFAULT = pd.Series(data = {})
-
-	data: dict[int, pd.DataFrame] = {}
-	reserved: dict[int, str] = {-1: 'shared'}
+	RESERVED: dict[int, tuple[str, dict[str, Any]]] = {
+		0: ('default', {
+				'id': -1,
+				'xp': 0,
+				'level': 0,
+				'warns': 0,
+				'chess': -1,
+		}),
+		-1: ('shared', {
+				'id': -1,
+				'lang': 'en-us'
+		}),
+		-2: ('servers', {
+				'id': -1,
+				'xp_enabled': False,
+				'logs_enabled': False
+		})}
+	"""
+	Contains information about what are the expected structure and
+	its default values whenever new entries are created.
+	 - USAGE: {id: (name, {entry: default})}
+	 - ID 0 represents single server savestate
+	"""
 
 	def __init__(self, *_) -> None:
 		raise NotImplementedError
@@ -69,23 +62,28 @@ def connect(user: str, password: str, host: str, port: str, name: str,
 	def new_attempt(i: int) -> bool:
 		try:
 			logs.info(f"Trying to connect to database.. (Attempt {i + 1})")
-			conn = Storage.engine.connect()
-			if conn:
-				conn.close()
+			if Config.data['local']:
+				Storage.conn = sqlLocal.connect(name + '.db')
 				return True
+			else:
+				Storage.conn = sqlServer.connect(
+					user = user,
+					password = password,
+					host = host,
+					port = port,
+					database = name)
+				if Storage.conn.is_connected():
+					return True
 		except Exception as err:
 			logs.error(f"Failed to connect: {err}")
-			return False
+			Storage.conn = None
 		return False
 
-	# Destroys old and Create new engine
-	if Storage.engine:
-		disconnect()
-	Storage.engine = sql.create_engine(
-		f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{name}")
+	# Destroys older connection
+	if Storage.conn: disconnect()
 
 	# Unlimited Retries
-	if retries < 0:
+	if retries <= 0:
 		i = 0
 		while new_attempt(i) is False:
 			time.sleep(timer)
@@ -93,14 +91,12 @@ def connect(user: str, password: str, host: str, port: str, name: str,
 		return True
 
 	# Limited Retries
-	else:
-		for i in range(retries):
-			if i != 0:
-				time.sleep(timer)
-			if new_attempt(i):
-				return True
-
-	Storage.engine = None
+	for i in range(retries):
+		if i != 0:
+			time.sleep(timer)
+		if new_attempt(i):
+			return True
+	logs.error(f"All {retries} attempts to connect to database has failed!")
 	return False
 
 	#==-----==#
@@ -111,120 +107,41 @@ def disconnect() -> None:
 	disconnect the connection if any exists
 	"""
 
-	if Storage.engine:
-		save()
-	Storage.engine = None
+	if Storage.conn:
+		Storage.conn.commit()
+		Storage.conn.close()
+		logs.info("Database has been disconnected!")
+	Storage.conn = None
 
 	#==-----==#
 
 def create_savestate(id: int) -> None:
 	"""
 	Creates a fresh new savestate ready to use
-	(If ID is -1, it regens a new shared savestate instead
-	of a server savestate)
 	"""
 
-	new_db: pd.DataFrame
-	if id == -1:
-		new_db = pd.DataFrame(columns = Storage.shared_save)
+	# Assign table name
+	# (stringified id if server, otherwise special name for RESERVEDs)
+	if id < 0 and id in Storage.RESERVED.keys():
+		table = Storage.RESERVED[id][0]
 	else:
-		new_db = pd.DataFrame(columns = Storage.server_save)
-	new_db.set_index('id', inplace = True)
-	Storage.data[id] = new_db
+		table = f"guild_{id}"
+		id = 0
+
+	# Finally create table if doesn't exists
+	# and commit changes if successful
+	cur = Storage.conn.cursor()
+	columns = Storage.RESERVED[id][1].keys()
+
+	try:
+		cur.execute(f"CREATE TABLE IF NOT EXISTS {table} ({', '.join(columns)})")
+		Storage.conn.commit()
+	except Exception as err:
+		logs.error(f"Couldn't create a new savestate: {err}")
 
 	#==-----==#
 
-def save(folder: str = Storage.folder) -> None:
-	"""
-	Saves the current data to the target file and folder
-	"""
-
-	if not len(Storage.data):
-		logs.error("SAVE failed! Cannot save data base since none exists!")
-		return
-
-	if Config.data['local']:
-		fold = Path(folder)
-		if not fold.exists():
-			fold.mkdir()
-
-		for i, v in Storage.data.items():
-			path = str(i)
-			if i in Storage.reserved.keys():
-				path = Storage.reserved[i]
-			v.to_csv(os.path.join(folder, path))
-
-	else: # Server
-		if not Storage.engine:
-			logs.error(f"SAVE failed since there's no connections yet!")
-			return
-
-		try:
-			with Storage.engine.begin() as conn:
-				for i, v in Storage.data.items():
-					table = str(i)
-					if i in Storage.reserved.keys():
-						table = Storage.reserved[i]
-					v.to_sql(table, conn, if_exists = 'replace')
-		except Exception as err:
-			logs.error(f"SAVE failed due to the following error: {err}")
-
-	#==-----==#
-
-def load(folder: str = Storage.folder) -> None:
-	"""
-	Loads the data from a target file and folder
-	"""
-
-	if Config.data['local']:
-		fold = Path(folder)
-		if not fold.exists():
-			fold.mkdir()
-		Storage.folder = folder
-
-		for i in fold.iterdir():
-			if not i.is_file():
-				continue
-
-			key = None
-			for k, v in Storage.reserved.items():
-				if i.name == v: key = k
-
-			try:
-				if key is None:
-					key = int(i.name)
-				Storage.data[key] = pd.read_csv(i, index_col = 'id')
-			except:
-				logs.error(f"LOAD failed for file: {i}! Corrupt file?")
-
-	else: # Server
-		if not Storage.engine:
-			logs.error(f"LOAD failed since there's no connections yet!")
-			return
-
-		meta = sql.MetaData()
-		meta.reflect(Storage.engine)
-		tables = meta.tables.values()
-
-		for i in tables:
-
-			key = None
-			for k, v in Storage.reserved.items():
-				if i.name == v: key = k
-
-			try:
-				if key is None:
-					key = int(i)
-				Storage.data[key] = pd.read_sql_table(i.name, Storage.engine, index_col = 'id')
-			except Exception as err:
-				logs.error(f"LOAD failed for table: {i}! Error: {err}")
-
-	if Storage.data.get(-1, None) is None:
-		create_savestate(-1)
-
-	#==-----==#
-
-def store(guild_id: int, user_id: int, data: pd.Series | Any, name: str = None) -> None:
+def store(table_id: int, user_id: int, data: dict[str, Any] | Any, name: str = None) -> None:
 	"""
 	Saves the given data within the storage for the given guild or
 	shared savestates for a designed user, and it can be further more
@@ -233,26 +150,68 @@ def store(guild_id: int, user_id: int, data: pd.Series | Any, name: str = None) 
 	NOTE: Automatly creates a new savestates if it is missing
 	"""
 
-	db = Storage.data.get(guild_id, None)
-	if db is None:
-		create_savestate(guild_id)
-		db = Storage.data[guild_id]
-
-	if name is None or type(data) == pd.Series:
-		db.loc[user_id] = data
-
+	# Retrieve table name
+	# (stringified id if server, otherwise special name for RESERVEDs)
+	server_id = table_id
+	if table_id < 0 and table_id in Storage.RESERVED.keys():
+		table = Storage.RESERVED[table_id][0]
 	else:
-		try:
-			if user_id not in db.index:
-				if guild_id == -1: db.loc[user_id] = Storage.SHARED_DEFAULT
-				else: db.loc[user_id] = Storage.SERVER_DEFAULT
-			db.loc[user_id, name] = data
-		except:
-			return
+		table = f"guild_{table_id}"
+		table_id = 0
+
+	# Retrieve some needed structures
+	cur = Storage.conn.cursor()
+	columns = Storage.RESERVED[table_id][1].keys()
+
+	# Checks if table exist, otherwise create it
+	if isinstance(Storage.conn, sqlLocal.Connection):
+		cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}'")
+		subst = '?'
+	elif isinstance(Storage.conn, sqlServer.MySQLConnection):
+		cur.execute(f"SHOW TABLES LIKE '{table}'")
+		subst = '%s'
+	else:
+		logs.error(f"Trying to store but no valid connection is set!")
+		return
+	if not cur.fetchone():
+		create_savestate(server_id)
+	if name and name not in columns:
+		logs.error(f"Trying to store data to non existant columns!")
+		return
+
+	# Retrieve original data
+	cur.execute(f"SELECT * FROM {table} WHERE id = {user_id}")
+	result = cur.fetchone()
+	if not result: result = Storage.RESERVED[table_id][1]
+	else: result = dict(zip(columns, result))
+
+	# Update the data with new data
+	if not name:
+		for k, v in data.items():
+			if k in result.keys():
+				result[k] = v
+	elif name in columns:
+		result['id'] = user_id
+		result[name] = data
+
+	# Insert into the database results
+	try:
+		cur.execute(f"SELECT * FROM {table} WHERE id = {user_id}")
+		if cur.fetchone():
+			update_values = ', '.join(f"{k} = {subst}" for k in result.keys())
+			values = tuple(result.values()) + (user_id,)
+			cur.execute(f"UPDATE {table} SET {update_values} WHERE id = {subst}", values)
+		else:
+			placeholders = ', '.join(subst for _ in result.keys())
+			values = tuple(result.values())
+			cur.execute(f"INSERT INTO {table} ({', '.join(x for x in result.keys())}) VALUES ({placeholders})", values)
+		Storage.conn.commit()
+	except Exception as err:
+		logs.error(f"Error occured while storing data: {err}")
 
 	#==-----==#
 
-def fetch(guild_id: int, user_id: int, name: str = None) -> pd.Series | Any:
+def fetch(table_id: int, user_id: int, name: str = None) -> dict[str, Any] | Any | None:
 	"""
 	Retrieves requested informations for any given guild or
 	shared savestates for a designed user, and it can be further more
@@ -264,22 +223,55 @@ def fetch(guild_id: int, user_id: int, name: str = None) -> pd.Series | Any:
 	NOTE: Automatly creates a new savestate if it is missing.
 	"""
 
-	db = Storage.data.get(guild_id, None)
-	if db is None:
-		create_savestate(guild_id)
-		db = Storage.data[guild_id]
-
-	if name is None:
-		try: return db.loc[user_id]
-		except:
-			if guild_id == -1: return Storage.SHARED_DEFAULT
-			else: return Storage.SERVER_DEFAULT
-
+	# Retrieve table name
+	# (stringified id if server, otherwise special name for RESERVEDs)
+	server_id = table_id
+	if table_id < 0 and table_id in Storage.RESERVED.keys():
+		table = Storage.RESERVED[table_id][0]
 	else:
-		try: return db.loc[user_id, name]
-		except:
-			try:
-				if guild_id == -1: return Storage.SHARED_DEFAULT[name]
-				else: return Storage.SERVER_DEFAULT[name]
-			except:
-				return None
+		table = f"guild_{table_id}"
+		table_id = 0
+
+	# Retrieve some needed structures
+	cur = Storage.conn.cursor()
+	columns = Storage.RESERVED[table_id][1].keys()
+	result = None
+
+	# Checks if table exist, otherwise create it
+	if isinstance(Storage.conn, sqlLocal.Connection):
+		cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}'")
+	elif isinstance(Storage.conn, sqlServer.MySQLConnection):
+		cur.execute(f"SHOW TABLES LIKE '{table}'")
+	else:
+		logs.error(f"Trying to store but no valid connection is set!")
+		return
+	if not cur.fetchone():
+		create_savestate(server_id)
+
+	# No specific entries
+	if not name:
+		try:
+			cur.execute(f"SELECT * FROM {table} WHERE id = {user_id}")
+			result = cur.fetchone()
+			if result:
+				result = dict(zip(columns, result))
+				return result
+		except Exception as err:
+			logs.error(f"Error occured while fetching data: {err}")
+		result = Storage.RESERVED[table_id][1]
+		result['id'] = user_id
+		return result
+
+	# Specific entry
+	elif name in columns:
+		try:
+			cur.execute(f"SELECT * FROM {table} WHERE id = {user_id}")
+			result = cur.fetchone()
+			if result:
+				result = dict(zip(columns, result))
+				return result[name]
+		except Exception as err:
+			logs.error(f"Error occured while fetching data: {err}")
+		return Storage.RESERVED[table_id][1][name]
+
+	return None

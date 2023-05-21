@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat May 20 19:45:16 CEST 2023     #
+#       //\   /         Last Updated: Sun May 21 18:00:10 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -68,7 +68,7 @@ class Client(discord.Client):
 	async def close(self):
 		print("\033[2K🌙\033[1;31m The maid has left the town.. \033[0m")
 		log.info("The connection has been terminated!")
-		database.save()
+		database.disconnect()
 		await super().close()
 
 	#==-----==#
@@ -111,18 +111,16 @@ def prepare(cwd: Path, config_file: str, log_file: str, log_level: int = log.DEB
 		exit(1)
 	info.clean(data["maxLogs"])
 
-	if not data["local"]:
-		if not database.connect(
-				config.data["database-user"],
-				config.data["database-pass"],
-				config.data["database-ip"],
-				config.data["database-port"],
-				config.data["database-name"],
-				config.data["database-retry"],
-				config.data["database-time"]):
-			log.error("Failed to connect to database!")
-			exit(2)
-	database.load()
+	if not database.connect(
+			config.data["database-user"],
+			config.data["database-pass"],
+			config.data["database-ip"],
+			config.data["database-port"],
+			config.data["database"],
+			config.data["database-retry"],
+			config.data["database-time"]):
+		log.error("Failed to connect to database!")
+		exit(2)
 	lz.load_locals(data["localizations"])
 
 	return (data["token"])

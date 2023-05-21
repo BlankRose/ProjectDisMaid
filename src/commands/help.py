@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Wed May 17 17:11:21 CEST 2023     #
+#       //\   /         Last Updated: Sun May 21 18:11:19 CEST 2023     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -63,7 +63,7 @@ class Help:
 						inline = False )
 
 				await self.origin.edit_original_response(content = lz.get_local(lang, Help.LOC_BASE + '.selector_switch'), embed = self.embed)
-				await ctx.response.send_message("Updated!", delete_after = 0)
+				await ctx.response.send_message("Updated!", delete_after = 0, ephemeral = True)
 
 			async def on_timeout(self) -> None:
 				try:
